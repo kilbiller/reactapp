@@ -1,6 +1,7 @@
 var gulp = require("gulp");
 var browserify = require("browserify");
 var browserSync = require("browser-sync");
+var historyApiFallback = require("connect-history-api-fallback");
 var del = require("del");
 var babelify = require("babelify");
 var fs = require("fs");
@@ -32,7 +33,8 @@ gulp.task("javascript", function() {
 gulp.task("browser-sync", ["javascript"], function() {
   browserSync.init({
     server: {
-      baseDir: "./"
+      baseDir: "./",
+      middleware: historyApiFallback()
     }
   });
 });

@@ -16,11 +16,9 @@ export default class Test extends React.Component {
   }
 
   render() {
-    return <div >
-      < h2 > {
-        this.props.item.name
-      } < /h2> < button onClick = {
-    this.delete
-  } > delete < /button> < /div > ;
-}
+    return <div>
+      <h2>{this.props.item.name}</h2>
+      <button onClick={this.delete}>delete</button>
+      </div>;
+  }
 }

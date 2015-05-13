@@ -1,4 +1,5 @@
 import React from "react";
+import Router, {Route, RouteHandler} from "react-router";
 
 // Stores
 import TestStore from "./stores/TestStore";
@@ -12,7 +13,9 @@ import Test from "./components/TestComponent";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {list: TestStore.list};
+    this.state = {
+      list: TestStore.list
+    };
 
     // Bindings
     this.onTestChange = this.onTestChange.bind(this);
@@ -40,14 +43,21 @@ class App extends React.Component {
   render() {
     return <div>
       <h1>Hello, world!</h1>
-      {
-        this.state.list.map(function(item, i){
-          return <Test id={i} item={item} key={i}/>;
-        })
-      }
+      {this.state.list.map(function(item, i) {
+        return <Test id={i} item={item} key={i} />;
+      })}
       <button onClick={this.deleteAll}>delete all</button>
+      <RouteHandler/>
     </div>;
   }
 }
 
-React.render(<App/>, document.body);
+var routes = (
+  <Route name="app" path="/" handler={App}>
+    <Route name="about" path="about" handler={App}/>
+  </Route>
+);
+
+Router.run(routes, Router.HistoryLocation, function(Handler) {
+  React.render(<Handler/>, document.body);
+});
