@@ -8,14 +8,16 @@ export default class Anime extends React.Component {
   }
 
   render() {
-    return <div className="row center-xs">
-            <div className="col-md-7">
-              <Paper zDepth={1}>
-                <h1>{this.props.anime.title}</h1>
-                <img src={this.props.anime.image}/>
-                <p>{this.props.anime.synopsis}</p>
-              </Paper>
-            </div>
-          </div>;
+    return (
+      <div className="row center-md">
+        <div className="col-md-8">
+          <Paper zDepth={1}>
+            <h1>{this.props.anime.title}</h1>
+            <img src={this.props.anime.image}/>
+            <p>{this.props.anime.synopsis}</p>
+          </Paper>
+        </div>
+      </div>
+    );
   }
 }
