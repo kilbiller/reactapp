@@ -1,5 +1,6 @@
 import React from "react";
 import Router, {Route, RouteHandler} from "react-router";
+import {RaisedButton} from "material-ui";
 
 // Stores
 import TestStore from "./stores/TestStore";
@@ -46,7 +47,7 @@ class App extends React.Component {
       {this.state.list.map(function(item, i) {
         return <Test id={i} item={item} key={i} />;
       })}
-      <button onClick={this.deleteAll}>delete all</button>
+      <RaisedButton label="Delete all" onClick={this.deleteAll}/>
       <RouteHandler/>
     </div>;
   }
