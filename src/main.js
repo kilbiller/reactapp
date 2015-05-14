@@ -1,40 +1,41 @@
 import React from "react";
 import Router, {Route, RouteHandler} from "react-router";
-import {RaisedButton} from "material-ui";
+import {Paper, RaisedButton} from "material-ui";
 
 // Stores
-import TestStore from "./stores/TestStore";
+import AnimeStore from "./stores/AnimeStore";
 
 // Actions
-import TestActions from "./actions/TestActions";
+import AnimeActions from "./actions/AnimeActions";
 
 // Components
-import Test from "./components/TestComponent";
+import Anime from "./components/AnimeComponent";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: TestStore.list
+      animeData: AnimeStore.data
     };
 
     // Bindings
-    this.onTestChange = this.onTestChange.bind(this);
+    this.onAnimeUpdated = this.onAnimeUpdated.bind(this);
     this.deleteAll = this.deleteAll.bind(this);
   }
 
   deleteAll() {
-    TestActions.testDeleteAll();
+    AnimeActions.testDeleteAll();
   }
 
-  onTestChange(test) {
+  onAnimeUpdated(data) {
     this.setState({
-      list: test
+      animeData: data
     });
   }
 
   componentDidMount() {
-    this.unsubscribe = TestStore.listen(this.onTestChange);
+    this.unsubscribe = AnimeStore.listen(this.onAnimeUpdated);
+    AnimeActions.loadData();
   }
 
   componentWillUnmount() {
@@ -43,12 +44,13 @@ class App extends React.Component {
 
   render() {
     return <div>
-      <h1>Hello, world!</h1>
-      {this.state.list.map(function(item, i) {
-        return <Test id={i} item={item} key={i} />;
+      <Paper className="header" zDepth={0}>
+        <h1>Header!!</h1>
+      </Paper>
+      {this.state.animeData.map(function(anime, index) {
+        return <Anime anime={anime} key={index}/>;
       })}
-      <RaisedButton label="Delete all" onClick={this.deleteAll}/>
-      <RouteHandler/>
+        <RouteHandler/>
     </div>;
   }
 }

@@ -2,7 +2,7 @@ import React from "react";
 import {RaisedButton} from "material-ui";
 
 // Actions
-import TestActions from "../actions/TestActions";
+import AnimeActions from "../actions/AnimeActions";
 
 export default class Test extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class Test extends React.Component {
   }
 
   delete() {
-    TestActions.testDelete(this.props.id);
+    AnimeActions.testDelete(this.props.id);
   }
 
   render() {

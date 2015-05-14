@@ -1,2 +1,8 @@
+@import "./libs/flexboxgrid";
+
 @import "../node_modules/material-ui-sass/material-ui";
-@import "../node_modules/material-ui-sass/material-ui/_html.scss";
+@import "../node_modules/material-ui-sass/material-ui/_html";
+
+.header {
+  height: 64px;
+}
