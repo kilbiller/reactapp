@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router";
 import {Paper} from "material-ui";
 
 export default class Header extends React.Component {
@@ -9,7 +10,7 @@ export default class Header extends React.Component {
   render() {
     return (
       <Paper className="header" zDepth={0}>
-        <h1>Header!!</h1>
+        <h1><Link to="app">AnimeList</Link></h1>
       </Paper>
     );
   }

@@ -4,6 +4,7 @@ import Router, {Route, DefaultRoute, RouteHandler} from "react-router";
 // Views
 import Home from "./views/Home";
 import Header from "./views/Header";
+import Anime from "./views/Anime";
 
 class App extends React.Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class App extends React.Component {
 var routes = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute handler={Home}/>
+    <Route name="anime" path="/anime" handler={Anime}></Route>
   </Route>
 );
 

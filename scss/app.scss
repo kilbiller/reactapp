@@ -4,5 +4,45 @@
 @import "../node_modules/material-ui-sass/material-ui/_html";
 
 .header {
-  height: 64px;
+  height: 6em;
+  background-color: $blue-grey-200;
+  padding: 1em;
+
+  a {
+    color: $grey-50;
+    text-decoration: none;
+  }
+
+  margin-bottom: 5em;
+}
+
+.animeDetails {
+
+  .animeDetails--title {
+    background-color: $blue-grey-200;
+    margin-bottom: 2em;
+    h2 {
+      color: $grey-50;
+      padding-top: 0.2em;
+      padding-bottom: 0.2em;
+    }
+  }
+
+  img {
+    width: 300px;
+  }
+
+  // not in episodesList so that it looks ok if there is no episodes
+  .mui-paper-container {
+    padding-bottom: 3em;
+  }
+
+  margin-bottom: 5em;
+}
+
+.episodesList {
+  margin-top: 3em;
+  margin-left: 10em;
+  margin-right: 10em;
+  //margin-bottom: 3em;
 }
