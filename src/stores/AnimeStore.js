@@ -9,6 +9,7 @@ export default Reflux.createStore({
   },
   onLoadData: function() {
       this.data = [{
+        id: 0,
         title: "Guilty Crown",
         image: "http://cdn.myanimelist.net/images/anime/8/33713l.jpg",
         alternativeTitles: [{
@@ -30,6 +31,7 @@ export default Reflux.createStore({
           airDate: "Oct 20, 2011 (JST)"
         }]
       }, {
+        id: 1,
         title: "Hellsing Ultimate",
         image: "http://cdn.myanimelist.net/images/anime/6/7333l.jpg",
         alternativeTitles: [{

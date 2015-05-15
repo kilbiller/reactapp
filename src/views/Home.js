@@ -9,7 +9,9 @@ export default class Home extends React.Component {
   render() {
     return(
       <div>
-        <Link to="anime">Anime</Link>
+        <Link to="animes">Anime</Link>
+        <br/>
+        <Link to="anime" params={{animeId: "0"}}>Test</Link>
       </div>
     );
   }

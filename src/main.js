@@ -4,7 +4,8 @@ import Router, {Route, DefaultRoute, RouteHandler} from "react-router";
 // Views
 import Home from "./views/Home";
 import Header from "./views/Header";
-import Anime from "./views/Anime";
+import Animes from "./views/Animes";
+import AnimeV from "./views/Anime";
 
 class App extends React.Component {
   constructor(props) {
@@ -26,10 +27,12 @@ class App extends React.Component {
 var routes = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute handler={Home}/>
-    <Route name="anime" path="/anime" handler={Anime}></Route>
+    <Route name="animes" path="/anime" handler={Animes}/>
+    <Route name="anime" path="/anime/:animeId" handler={AnimeV}/>
   </Route>
 );
 
-Router.run(routes, Router.HistoryLocation, function(Handler) {
-  React.render(<Handler/>, document.body);
+Router.run(routes, Router.HistoryLocation, function(Handler, state) {
+  var params = state.params;
+  React.render(<Handler params={params}/>, document.body);
 });

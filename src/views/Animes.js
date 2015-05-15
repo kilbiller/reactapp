@@ -9,7 +9,7 @@ import AnimeActions from "../actions/AnimeActions";
 // Components
 import AnimeDetails from "../components/AnimeDetails";
 
-export default class Anime extends React.Component {
+export default class Animes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,11 +41,12 @@ export default class Anime extends React.Component {
   }
 
   render() {
-    for (var i = 0; i < this.state.animeData.length; i++) {
-      if (this.state.animeData[i].id === parseInt(this.props.params.animeId)) {
-        return (<div><AnimeDetails anime={this.state.animeData[i]}/></div>);
-      }
-    }
-    return <h1>{this.props.params.animeId}</h1>;
+    return(
+      <div>
+        {this.state.animeData.map(function(anime, index) {
+          return <AnimeDetails anime={anime} key={index}/>;
+        })}
+      </div>
+    );
   }
 }
