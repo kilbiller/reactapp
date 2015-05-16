@@ -20,7 +20,6 @@ export default class Animes extends React.Component {
     this.onAnimeUpdated = this.onAnimeUpdated.bind(this);
   }
 
-
   onAnimeUpdated(animes) {
     this.setState({
       animes: animes

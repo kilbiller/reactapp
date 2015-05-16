@@ -1,14 +1,23 @@
 import React from "react";
-import {Paper} from "material-ui";
+import {
+  Paper
+}
+from "material-ui";
 
+// Components
+import Episode from "./Episode";
 
-export default class Anime extends React.Component {
+export default class AnimeDetails extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    return (
+    var episodes = this.props.anime.episodes.map(function(episode, index) {
+      return <Episode episode={episode} key={index}/>;
+    });
+
+    return(
       <div className="row center-md">
         <div className="col-md-10">
           <Paper zDepth={1} className="animeDetails">
@@ -28,10 +37,12 @@ export default class Anime extends React.Component {
                 </div>
               </div>
             </div>
-            <Paper zDepth={1} className="episodesList">
-              <h2>Episodes</h2>
-              <p>test</p>
-            </Paper>
+            <div className="episodesList">
+              <div className="episodesList--title">
+                <h2>Episodes 0/{this.props.anime.episodes.length}</h2>
+              </div>
+              {episodes}
+            </div>
           </Paper>
         </div>
       </div>

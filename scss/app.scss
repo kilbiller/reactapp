@@ -35,6 +35,10 @@ header {
     width: 300px;
   }
 
+  p {
+    text-align: justify;
+  }
+
   // not in episodesList so that it looks ok if there is no episodes
   .mui-paper-container {
     padding-bottom: 3em;
@@ -47,5 +51,62 @@ header {
   margin-top: 3em;
   margin-left: 10em;
   margin-right: 10em;
-  //margin-bottom: 3em;
+
+  .episodesList--title {
+    background-color: $blue-grey-500;
+    margin-bottom: 0.5em;
+    h2 {
+      color: $grey-50;
+      padding-top: 0.2em;
+      padding-bottom: 0.2em;
+      margin-bottom: 0em;
+    }
+  }
+}
+
+.episode {
+  margin-bottom: 1em;
+
+  .mui-paper-container {
+    padding-bottom: 0;
+    min-height: 5em;
+    display: flex;
+    justify-content: center;
+  }
+
+  .episode--number {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 5em;
+    background-color: $blue-grey-500;
+
+    span {
+      flex: 1;
+      color: $grey-50;
+      font-size: 3em;
+    }
+  }
+
+  .episode--title {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    /*width: 2em;
+    background-color: $blue-grey-500;
+    color: $grey-50;
+    font-size: 3em;
+    text-align: center;*/
+
+    span {
+      flex: 1;
+      font-size: 2em;
+    }
+  }
+
+  .episode--actions {
+    display: flex;
+    flex: 1;
+    max-width: 10em;
+  }
 }

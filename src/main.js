@@ -5,7 +5,7 @@ import Router, {Route, DefaultRoute, RouteHandler} from "react-router";
 import Home from "./views/Home";
 import Header from "./views/Header";
 import Animes from "./views/Animes";
-import AnimeV from "./views/Anime";
+import Anime from "./views/Anime";
 
 class App extends React.Component {
   constructor(props) {
@@ -28,7 +28,7 @@ var routes = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute handler={Home}/>
     <Route name="animes" path="/anime" handler={Animes}/>
-    <Route name="anime" path="/anime/:animeId" handler={AnimeV}/>
+    <Route name="anime" path="/anime/:animeId" handler={Anime}/>
   </Route>
 );
 

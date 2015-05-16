@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 
 // Stores
 import AnimeStore from "../stores/AnimeStore";
@@ -36,11 +37,14 @@ export default class Anime extends React.Component {
   }
 
   render() {
-    for (var i = 0; i < this.state.animes.length; i++) {
-      if (this.state.animes[i].id === parseInt(this.props.params.animeId)) {
-        return (<div><AnimeDetails anime={this.state.animes[i]}/></div>);
-      }
+    var anime = _.find(this.state.animes, {
+      id: parseInt(this.props.params.animeId)
+    });
+
+    if(anime) {
+      return(<div><AnimeDetails anime={anime}/></div>);
     }
+
     return <h1>{this.props.params.animeId}</h1>;
   }
 }

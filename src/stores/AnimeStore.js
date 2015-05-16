@@ -24,9 +24,11 @@ export default Reflux.createStore({
       genres: ["Action", "Drama", "Sci-Fi", "Shounen", "Super Power"],
       duration: "24 min. per episode",
       episodes: [{
+        number: 1,
         title: "Outbreak:Genesis",
         airDate: "Oct 13, 2011 (JST)"
       }, {
+        number: 2,
         title: "The Fittest:Survival of the Fittest",
         airDate: "Oct 20, 2011 (JST)"
       }]
@@ -49,10 +51,12 @@ export default Reflux.createStore({
       genres: ["Action", "Horror", "Vampire", "Supernatural", "Military", "Seinen"],
       duration: "50 min. per episode",
       episodes: [{
-        title: "Outbreak:Genesis",
+        number: 1,
+        title: "Hellsing 1",
         airDate: "Oct 13, 2011 (JST)"
       }, {
-        title: "The Fittest:Survival of the Fittest",
+        number: 2,
+        title: "Hellsing 2",
         airDate: "Oct 20, 2011 (JST)"
       }]
     }];

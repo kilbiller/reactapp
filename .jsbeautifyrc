@@ -3,5 +3,6 @@
   "preserve_newlines": true,
   "max_preserve_newlines": 2,
   "space_before_conditional": false,
-  "end_with_newline": true
+  "end_with_newline": true,
+  "e4x": true
 }
