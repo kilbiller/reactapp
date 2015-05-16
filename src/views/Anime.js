@@ -13,27 +13,22 @@ export default class Anime extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      animeData: AnimeStore.data
+      animes: AnimeStore.animes
     };
 
     // Bindings
     this.onAnimeUpdated = this.onAnimeUpdated.bind(this);
-    this.deleteAll = this.deleteAll.bind(this);
   }
 
-  deleteAll() {
-    AnimeActions.testDeleteAll();
-  }
-
-  onAnimeUpdated(data) {
+  onAnimeUpdated(animes) {
     this.setState({
-      animeData: data
+      animes: animes
     });
   }
 
   componentDidMount() {
     this.unsubscribe = AnimeStore.listen(this.onAnimeUpdated);
-    AnimeActions.loadData();
+    AnimeActions.refreshStore();
   }
 
   componentWillUnmount() {
@@ -41,9 +36,9 @@ export default class Anime extends React.Component {
   }
 
   render() {
-    for (var i = 0; i < this.state.animeData.length; i++) {
-      if (this.state.animeData[i].id === parseInt(this.props.params.animeId)) {
-        return (<div><AnimeDetails anime={this.state.animeData[i]}/></div>);
+    for (var i = 0; i < this.state.animes.length; i++) {
+      if (this.state.animes[i].id === parseInt(this.props.params.animeId)) {
+        return (<div><AnimeDetails anime={this.state.animes[i]}/></div>);
       }
     }
     return <h1>{this.props.params.animeId}</h1>;
