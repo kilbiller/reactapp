@@ -8,7 +8,7 @@ var Actions = Reflux.createActions({
 });
 
 Actions.refreshStore.listen(function() {
-  request.get("/anime").end(function(err, res) {
+  request.get("/api/anime").end(function(err, res) {
     if(res.ok) {
       Actions.refreshStore.completed(res.text);
     } else {
