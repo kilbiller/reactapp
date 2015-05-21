@@ -9,6 +9,7 @@ var fs = require("fs");
 var sass = require("gulp-sass");
 var postcss = require("gulp-postcss");
 var autoprefixer = require("autoprefixer-core");
+var nodemon = require("gulp-nodemon");
 
 gulp.task("javascript", function() {
   var file = fs.createWriteStream("./build/app.js");
@@ -42,11 +43,25 @@ gulp.task("css", function() {
     }));
 });
 
-gulp.task("browser-sync", ["javascript", "css"], function() {
+gulp.task("browser-sync", ["javascript", "css", "nodemon"], function() {
   browserSync.init({
-    server: {
+    /*server: {
       baseDir: "./",
       middleware: historyApiFallback()
+    },*/
+    port: 3000,
+    proxy: "http://localhost:8000"
+  });
+});
+
+gulp.task("nodemon", function(cb) {
+  var called = false;
+  return nodemon({
+    script: "server.js"
+  }).on("start", function() {
+    if(!called) {
+      called = true;
+      cb();
     }
   });
 });
@@ -60,6 +75,6 @@ gulp.task("clean", function(cb) {
 });
 
 gulp.task("default", ["browser-sync"], function() {
-  gulp.watch(["src/**/*.js"], ["javascript"]);
+  gulp.watch(["src/**/*.js", "server.js"], ["javascript"]);
   gulp.watch("scss/*.scss", ["css"]);
 });
