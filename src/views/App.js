@@ -16,7 +16,7 @@ export default class App extends React.Component {
     return(
       <div>
         <Header/>
-        <div className="container-fluid">
+        <div className="container">
           <RouteHandler {...this.props}/>
         </div>
       </div>

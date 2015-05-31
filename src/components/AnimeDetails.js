@@ -1,8 +1,4 @@
 import React from "react";
-import {
-  Paper
-}
-from "material-ui";
 
 // Components
 import Episode from "./Episode";
@@ -18,20 +14,17 @@ export default class AnimeDetails extends React.Component {
     });
 
     return(
-      <div className="row center-md">
-        <div className="col-md-10">
-          <Paper zDepth={1} className="animeDetails">
+      <div className="row">
+        <div className="col s12">
+          <div className="animeDetails">
             <div className="animeDetails--title">
               <h2>{this.props.anime.title}</h2>
             </div>
             <div className="row">
-              <div className="col-md-3">
+              <div className="col s4">
                 <img src={this.props.anime.image}/>
               </div>
-              <div className="col-md-7">
-                <div className="row">
-                  <h3>Synopsis</h3>
-                </div>
+              <div className="col s8">
                 <div className="row">
                   <p>{this.props.anime.synopsis}</p>
                 </div>
@@ -43,7 +36,7 @@ export default class AnimeDetails extends React.Component {
               </div>
               {episodes}
             </div>
-          </Paper>
+          </div>
         </div>
       </div>
     );
