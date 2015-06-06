@@ -2,7 +2,10 @@ doctype html
 html(lang="en")
   head
     title React App
-    link(href="http://fonts.googleapis.com/css?family=Roboto:400,300,500" rel="stylesheet" type="text/css")
-    link(href="build/app.css" rel="stylesheet" type="text/css")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+    link(href="/node_modules/materialize-css/bin/materialize.css" rel="stylesheet" type="text/css")
+    link(href="/build/app.css" rel="stylesheet" type="text/css")
   body
-    #{html}
+    script(src="/build/app.js")
+    script(src="https://code.jquery.com/jquery-2.1.1.min.js")
+    script(src="/node_modules/materialize-css/bin/materialize.js")

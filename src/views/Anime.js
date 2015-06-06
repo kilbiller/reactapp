@@ -45,6 +45,6 @@ export default class Anime extends React.Component {
       return(<div><AnimeDetails anime={anime}/></div>);
     }
 
-    return <h1>{this.props.params.animeId}</h1>;
+    return(<div><h1>{this.props.params.animeId}</h1></div>);
   }
 }
