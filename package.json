@@ -28,6 +28,7 @@
     "jade": "^1.9.2",
     "lodash": "^3.8.0",
     "materialize-css": "^0.96.1",
+    "mongoose": "^4.0.5",
     "morgan": "^1.5.3",
     "react": "^0.13.3",
     "react-router": "^0.13.3",

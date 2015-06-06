@@ -38,7 +38,7 @@ export default class Anime extends React.Component {
 
   render() {
     var anime = _.find(this.state.animes, {
-      id: parseInt(this.props.params.animeId)
+      title: this.props.params.animeId
     });
 
     if(anime) {

@@ -8,14 +8,14 @@ export default Reflux.createStore({
     this.animes = [];
   },
   onRefreshStore: function() {
-    console.log("Loading ...");
+    console.log("Refreshing store...");
   },
   onRefreshStoreCompleted: function(text) {
-    console.log("Completed load");
+    console.log("Store refreshed.");
     this.animes = JSON.parse(text);
     this.trigger(this.animes);
   },
   onRefreshStoreFailed: function() {
-    console.log("Error during load");
+    console.log("Error during refreshing.");
   }
 });

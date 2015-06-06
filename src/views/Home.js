@@ -1,5 +1,8 @@
 import React from "react";
-import {Link} from "react-router";
+import {
+  Link
+}
+from "react-router";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -11,7 +14,7 @@ export default class Home extends React.Component {
       <div>
         <Link to="animes">Anime</Link>
         <br/>
-        <Link to="anime" params={{animeId: "0"}}>Test</Link>
+        <Link to="anime" params={{animeId: "Guilty Crown"}}>Test</Link>
       </div>
     );
   }
