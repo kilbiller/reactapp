@@ -6,6 +6,10 @@ var morgan = require("morgan");
 var mongoose = require("mongoose");
 var Anime = require("./Models/Anime");
 
+var React = require("react");
+var Router = require("react-router");
+var routes = require("./routes");
+
 mongoose.connect("mongodb://localhost/reactapp");
 var db = mongoose.connection;
 
@@ -50,8 +54,6 @@ db.on("error", console.error.bind(console, "connection error:"));
   });
 });*/
 
-//var middleware = require("./react-router-middleware");
-
 var app = express();
 
 app.set("views", "./");
@@ -69,10 +71,25 @@ app.get("/api/anime", function(req, res) {
   });
 });
 
+// Server side rendering to speed up load (then app.js in index.jade takes over as client side-rendering)
 app.get("*", function(req, res) {
-  res.render("index");
+  var called = false;
+  if(req.url === "/favicon.ico") {
+    called = true;
+  }
+  if(!called) {
+    var router = Router.create({
+      location: req.url,
+      routes: routes
+    });
+    router.run(function(Handler) {
+      var elem = React.createElement(Handler);
+      var html = React.renderToString(elem);
+      res.render("index", {
+        html: html
+      });
+    });
+  }
 });
-
-//app.use(middleware);
 
 app.listen(8000);

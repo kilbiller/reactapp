@@ -12,9 +12,11 @@ export default class Home extends React.Component {
   render() {
     return(
       <div>
-        <Link to="animes">Anime</Link>
+        <Link to="/animes">Get All Anime</Link>
         <br/>
-        <Link to="anime" params={{animeId: "Guilty Crown"}}>Test</Link>
+        <Link to="/animes/Guilty Crown">Get Guilty Crown</Link>
+        <br/>
+        <Link to="/addanime">Add an anime</Link>
       </div>
     );
   }
