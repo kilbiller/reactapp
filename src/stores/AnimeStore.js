@@ -10,12 +10,22 @@ export default Reflux.createStore({
   onRefreshStore: function() {
     console.log("Refreshing store...");
   },
-  onRefreshStoreCompleted: function(text) {
+  onRefreshStoreCompleted: function(data) {
     console.log("Store refreshed.");
-    this.animes = JSON.parse(text);
+    this.animes = JSON.parse(data);
     this.trigger(this.animes);
   },
   onRefreshStoreFailed: function() {
     console.log("Error during refreshing.");
+  },
+  onAddAnime: function() {
+    console.log("Adding an anime...");
+  },
+  onAddAnimeCompleted: function(data) {
+    console.log("Anime Added.");
+    this.trigger(JSON.parse(data));
+  },
+  onAddAnimeFailed: function() {
+    console.log("Error during addAnime.");
   }
 });

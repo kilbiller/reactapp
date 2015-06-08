@@ -2,7 +2,6 @@ var gulp = require("gulp");
 var browserify = require("browserify");
 var browserSync = require("browser-sync");
 var reload = browserSync.reload;
-var historyApiFallback = require("connect-history-api-fallback");
 var del = require("del");
 var babelify = require("babelify");
 var fs = require("fs");
@@ -43,12 +42,8 @@ gulp.task("css", function() {
     }));
 });
 
-gulp.task("browser-sync", ["javascript", "css", "nodemon"], function() {
+gulp.task("browser-sync", ["nodemon"], function() {
   browserSync.init({
-    /*server: {
-      baseDir: "./",
-      middleware: historyApiFallback()
-    },*/
     port: 3000,
     proxy: "http://localhost:8000"
   });
@@ -69,12 +64,13 @@ gulp.task("nodemon", function(cb) {
 // clean build directory
 gulp.task("clean", function(cb) {
   del(["build"], cb);
+});
+
+gulp.task("default", ["javascript", "css", "browser-sync"], function() {
   if(!fs.existsSync("./build")) {
     fs.mkdirSync("./build");
   }
-});
 
-gulp.task("default", ["browser-sync"], function() {
-  gulp.watch(["src/**/*.js", "server.js"], ["javascript"]);
+  gulp.watch(["src/**/*.js", "server.js", "routes.js", "index.jade"], ["javascript"]);
   gulp.watch("scss/*.scss", ["css"]);
 });

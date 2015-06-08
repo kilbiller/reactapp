@@ -2,6 +2,7 @@ require("babel/register");
 
 var express = require("express");
 var morgan = require("morgan");
+var bodyParser = require('body-parser');
 //var path = require("path");
 var mongoose = require("mongoose");
 var Anime = require("./Models/Anime");
@@ -61,6 +62,7 @@ app.set("view engine", "jade");
 
 app.use(morgan("dev"));
 app.use(express.static(__dirname));
+app.use(bodyParser.json());
 
 app.get("/api/anime", function(req, res) {
   Anime.find(function(err, animes) {
@@ -68,6 +70,42 @@ app.get("/api/anime", function(req, res) {
       return console.error(err);
     }
     res.send(animes);
+  });
+});
+
+app.post("/api/anime", function(req, res) {
+  var anime = new Anime({
+    title: req.body.title,
+    image: "http://cdn.myanimelist.net/images/anime/8/33713l.jpg",
+    alternativeTitles: [{
+      language: "japanese",
+      title: "ギルティクラウン"
+    }],
+    synopsis: req.body.synopsis,
+    status: "Finished Airing",
+    airStart: "Oct 14, 2011",
+    airEnd: "Mar 23, 2012",
+    producers: ["Production I.G", "Aniplex", "Dentsu", "FUNimation Entertainment", "Movic", "Fuji TV", "Fuji Pacific Music Publishing"],
+    genres: ["Action", "Drama", "Sci-Fi", "Shounen", "Super Power"],
+    duration: "24 min. per episode",
+    episodes: [{
+      number: 1,
+      title: "Outbreak:Genesis",
+      airDate: "Oct 13, 2011 (JST)"
+    }, {
+      number: 2,
+      title: "The Fittest:Survival of the Fittest",
+      airDate: "Oct 20, 2011 (JST)"
+    }]
+  });
+
+  anime.save(function(err, item) {
+    if(err) {
+      return console.error(err);
+    }
+    res.json({
+      id: item.title
+    });
   });
 });
 
