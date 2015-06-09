@@ -1,8 +1,4 @@
 import React from "react";
-import {
-  Link
-}
-from "react-router";
 
 // Stores
 import AnimeStore from "../stores/AnimeStore";
@@ -10,7 +6,7 @@ import AnimeStore from "../stores/AnimeStore";
 // Actions
 import AnimeActions from "../actions/AnimeActions";
 
-export default class Anime extends React.Component {
+export default class AnimesAdd extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +22,10 @@ export default class Anime extends React.Component {
     this.setState({
       data: data
     });
-    //Materialize.toast('I am a toast!', 4000);
+
+    if(this.state.data) {
+      this.context.router.transitionTo("/animes/" + this.state.data.title);
+    }
   }
 
   componentDidMount() {
@@ -47,14 +46,8 @@ export default class Anime extends React.Component {
   }
 
   render() {
-    var flash;
-    if(this.state.data) {
-      flash = <div className="card-panel blue-grey">Anime created. <Link to={"/animes/" + this.state.data.id}>Link to ressource</Link></div>;
-    }
-
     return(
       <div className="row">
-        {flash}
         <form className="col s12">
           <div className="row">
             <div className="input-field col s12">
@@ -72,3 +65,7 @@ export default class Anime extends React.Component {
     );
   }
 }
+
+AnimesAdd.contextTypes = {
+  router: React.PropTypes.func
+};

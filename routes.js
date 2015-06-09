@@ -6,16 +6,16 @@ from "react-router";
 
 import Home from "./src/views/Home";
 import Animes from "./src/views/Animes";
-import Anime from "./src/views/Anime";
+import AnimesShow from "./src/views/AnimesShow";
 import App from "./src/views/App";
-import AddAnime from "./src/views/AddAnime";
+import AnimesAdd from "./src/views/AnimesAdd";
 
 var routes = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute handler={Home}/>
     <Route path="/animes" handler={Animes}/>
-    <Route path="/animes/:animeId" handler={Anime}/>
-    <Route path="/addanime" handler={AddAnime}/>
+    <Route path="/animes/:anime" handler={AnimesShow}/>
+    <Route path="/addanime" handler={AnimesAdd}/>
   </Route>
 );
 
