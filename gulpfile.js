@@ -4,30 +4,35 @@ var browserSync = require("browser-sync");
 var reload = browserSync.reload;
 var del = require("del");
 var babelify = require("babelify");
-var fs = require("fs");
 var sass = require("gulp-sass");
 var postcss = require("gulp-postcss");
 var autoprefixer = require("autoprefixer-core");
 var nodemon = require("gulp-nodemon");
+var uglify = require("gulp-uglify");
+var source = require("vinyl-source-stream");
+var buffer = require("vinyl-buffer");
+var gutil = require("gulp-util");
+var sourcemaps = require("gulp-sourcemaps");
 
 gulp.task("javascript", function() {
-  var file = fs.createWriteStream("./build/app.js");
-  file.on("finish", function() {
-    browserSync.reload();
-  });
-
   browserify({
+      entries: "./src/main.js",
       debug: true
     })
     .transform(babelify)
-    .require("./src/main.js", {
-      entry: true
-    })
     .bundle()
-    .on("error", function(err) {
-      console.log("Error: " + err.message);
-    })
-    .pipe(file);
+    .pipe(source("app.js"))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({
+      loadMaps: true
+    }))
+    .pipe(uglify())
+    .on("error", gutil.log)
+    .pipe(sourcemaps.write("./"))
+    .pipe(gulp.dest("./build/"))
+    .pipe(browserSync.reload({
+      stream: true
+    }));
 });
 
 gulp.task("css", function() {
@@ -67,10 +72,6 @@ gulp.task("clean", function(cb) {
 });
 
 gulp.task("default", ["javascript", "css", "browser-sync"], function() {
-  if(!fs.existsSync("./build")) {
-    fs.mkdirSync("./build");
-  }
-
   gulp.watch(["src/**/*.js", "server.js", "routes.js", "index.jade"], ["javascript"]);
   gulp.watch("scss/*.scss", ["css"]);
 });

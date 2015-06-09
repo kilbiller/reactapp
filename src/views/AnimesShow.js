@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+import find from "lodash/collection/find";
 
 // Stores
 import AnimeStore from "../stores/AnimeStore";
@@ -26,7 +26,7 @@ export default class AnimesShow extends React.Component {
   }
 
   onAnimeUpdated(payload) {
-    var anime = _.find(payload, {
+    var anime = find(payload, {
       title: this.props.params.anime
     });
 
