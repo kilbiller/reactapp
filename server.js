@@ -2,10 +2,10 @@ require("babel/register");
 
 var express = require("express");
 var morgan = require("morgan");
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 //var path = require("path");
 var mongoose = require("mongoose");
-var Anime = require("./Models/Anime");
+var Anime = require("./models/Anime");
 
 var React = require("react");
 var Router = require("react-router");
