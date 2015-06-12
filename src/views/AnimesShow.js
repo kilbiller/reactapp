@@ -27,7 +27,7 @@ export default class AnimesShow extends React.Component {
 
   onAnimeUpdated(payload) {
     var anime = find(payload, {
-      title: this.props.params.anime
+      slug: this.props.params.anime
     });
 
     this.setState({

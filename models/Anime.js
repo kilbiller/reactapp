@@ -1,7 +1,15 @@
-var mongoose = require("mongoose");
+import mongoose from "mongoose";
+import slug from "slug";
 
 var schema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true
+  },
+  year: {
+    type: Number,
+    required: true
+  },
   image: String,
   alternativeTitles: [{
     language: String,
@@ -18,7 +26,15 @@ var schema = new mongoose.Schema({
     number: Number,
     title: String,
     airDate: Date
-  }]
+  }],
+  slug: String
+});
+
+schema.pre("save", function(next) {
+  this.slug = slug(this.title + "-" + this.year, {
+    lower: true
+  });
+  next();
 });
 
 var Anime = mongoose.model("Anime", schema);

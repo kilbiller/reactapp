@@ -16,7 +16,7 @@ var Actions = Reflux.createActions({
 Actions.refreshStore.listen(function() {
   request.get("/api/anime").end(function(err, res) {
     if(!err) {
-      Actions.refreshStore.completed(res.text);
+      Actions.refreshStore.completed(JSON.parse(res.text));
     } else {
       Actions.refreshStore.failed(err);
     }
@@ -28,9 +28,9 @@ Actions.addAnime.listen(function(anime) {
     .send(anime)
     .end(function(err, res) {
       if(!err) {
-        Actions.addAnime.completed(res.text);
+        Actions.addAnime.completed(JSON.parse(res.text));
       } else {
-        Actions.addAnime.failed(err);
+        Actions.addAnime.failed(JSON.parse(res.text));
       }
     });
 });
@@ -39,7 +39,7 @@ Actions.deleteAnime.listen(function(title) {
   request.del("/api/anime/" + title)
     .end(function(err, res) {
       if(!err) {
-        Actions.deleteAnime.completed(res.text);
+        Actions.deleteAnime.completed(JSON.parse(res.text));
       } else {
         Actions.deleteAnime.failed(err);
       }

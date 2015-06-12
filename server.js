@@ -20,9 +20,9 @@ var app = express();
 app.set("views", "./");
 app.set("view engine", "jade");
 
-app.use(morgan("dev"));
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
+app.use(morgan("dev"));
 
 app.get("/api/anime", function(req, res) {
   Anime.find(function(err, animes) {
@@ -36,10 +36,11 @@ app.get("/api/anime", function(req, res) {
 app.post("/api/anime", function(req, res) {
   var anime = new Anime({
     title: req.body.title,
+    year: req.body.year,
     image: "http://cdn.myanimelist.net/images/anime/8/33713l.jpg",
     alternativeTitles: [{
       language: "japanese",
-      title: "ギルティクラウン"
+      title: "test_title"
     }],
     synopsis: req.body.synopsis,
     status: "Finished Airing",
@@ -61,15 +62,15 @@ app.post("/api/anime", function(req, res) {
 
   anime.save(function(err, item) {
     if(err) {
-      console.error(err);
-      res.status(500).json({
-        status: 500
+      return res.status(400).json({
+        status: 400,
+        error: err.message
       });
     }
     res.status(201).json({
       status: 201,
-      url: "http://" + req.hostname + "/animes/" + item.title,
-      title: item.title
+      url: "http://" + req.hostname + "/animes/" + item.slug,
+      slug: item.slug
     });
   });
 });
@@ -89,23 +90,23 @@ app.delete("/api/anime/:anime", function(req, res) {
 
 // Server side rendering to speed up load (then app.js in index.jade takes over as client side-rendering)
 app.get("*", function(req, res) {
-  var called = false;
+  // handle unwanted requests
   if(req.url === "/favicon.ico") {
-    called = true;
+    res.status(200).set("Content-Type", "image/x-icon").end();
+    return;
   }
-  if(!called) {
-    var router = Router.create({
-      location: req.url,
-      routes: routes
+
+  var router = Router.create({
+    location: req.url,
+    routes: routes
+  });
+  router.run(function(Handler) {
+    var elem = React.createElement(Handler);
+    var html = React.renderToString(elem);
+    res.render("index", {
+      html: html
     });
-    router.run(function(Handler) {
-      var elem = React.createElement(Handler);
-      var html = React.renderToString(elem);
-      res.render("index", {
-        html: html
-      });
-    });
-  }
+  });
 });
 
 app.listen(8000);

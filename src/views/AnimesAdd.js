@@ -24,7 +24,7 @@ export default class AnimesAdd extends React.Component {
     });
 
     if(this.state.data) {
-      this.context.router.transitionTo("/animes/" + this.state.data.title);
+      this.context.router.transitionTo("/animes/" + this.state.data.slug);
     }
   }
 
@@ -40,6 +40,7 @@ export default class AnimesAdd extends React.Component {
     e.preventDefault();
     var anime = {
       title: React.findDOMNode(this.refs.title).value.trim(),
+      year: React.findDOMNode(this.refs.year).value.trim(),
       synopsis: React.findDOMNode(this.refs.synopsis).value.trim()
     };
     AnimeActions.addAnime(anime);
@@ -53,6 +54,10 @@ export default class AnimesAdd extends React.Component {
             <div className="input-field col s12">
               <input ref="title" id="title" type="text" className="validate"/>
               <label htmlFor="title">Title</label>
+            </div>
+            <div className="input-field col s12">
+              <input ref="year" id="year" type="number" className="validate"/>
+              <label htmlFor="year">Release year</label>
             </div>
             <div className="input-field col s12">
               <input ref="synopsis" id="synopsis" type="text" className="validate"/>

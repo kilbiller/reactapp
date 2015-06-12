@@ -22,7 +22,7 @@ export default class AnimeDetails extends React.Component {
         <div className="col s12">
           <div className="animeDetails">
             <div className="animeDetails--title">
-              <h2><Link to={"/animes/" + this.props.anime.title}>{this.props.anime.title}</Link></h2>
+              <h2><Link to={"/animes/" + this.props.anime.slug}>{this.props.anime.title}</Link></h2>
             </div>
             <div className="row">
               <div className="col s4">
