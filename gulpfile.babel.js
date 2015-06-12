@@ -1,20 +1,22 @@
-var gulp = require("gulp");
-var browserify = require("browserify");
-var browserSync = require("browser-sync");
-var reload = browserSync.reload;
-var del = require("del");
-var babelify = require("babelify");
-var sass = require("gulp-sass");
-var postcss = require("gulp-postcss");
-var autoprefixer = require("autoprefixer-core");
-var nodemon = require("gulp-nodemon");
-var uglify = require("gulp-uglify");
-var source = require("vinyl-source-stream");
-var buffer = require("vinyl-buffer");
-var gutil = require("gulp-util");
-var sourcemaps = require("gulp-sourcemaps");
+import gulp from "gulp";
+import browserify from "browserify";
+import browserSync, {
+  reload
+}
+from "browser-sync";
+import del from "del";
+import babelify from "babelify";
+import sass from "gulp-sass";
+import postcss from "gulp-postcss";
+import autoprefixer from "autoprefixer-core";
+import nodemon from "gulp-nodemon";
+import uglify from "gulp-uglify";
+import source from "vinyl-source-stream";
+import buffer from "vinyl-buffer";
+import gutil from "gulp-util";
+import sourcemaps from "gulp-sourcemaps";
 
-gulp.task("javascript", function() {
+gulp.task("javascript", () => {
   browserify({
       entries: "./src/main.js",
       debug: true
@@ -35,7 +37,7 @@ gulp.task("javascript", function() {
     }));
 });
 
-gulp.task("css", function() {
+gulp.task("css", () => {
   gulp.src("scss/app.scss")
     .pipe(sass())
     .pipe(postcss([autoprefixer({
@@ -47,18 +49,18 @@ gulp.task("css", function() {
     }));
 });
 
-gulp.task("browser-sync", ["nodemon"], function() {
+gulp.task("browser-sync", ["nodemon"], () => {
   browserSync.init({
     port: 3000,
     proxy: "http://localhost:8000"
   });
 });
 
-gulp.task("nodemon", function(cb) {
+gulp.task("nodemon", (cb) => {
   var called = false;
   return nodemon({
     script: "server.js"
-  }).on("start", function() {
+  }).on("start", () => {
     if(!called) {
       called = true;
       cb();
@@ -67,11 +69,11 @@ gulp.task("nodemon", function(cb) {
 });
 
 // clean build directory
-gulp.task("clean", function(cb) {
+gulp.task("clean", (cb) => {
   del(["build"], cb);
 });
 
-gulp.task("default", ["javascript", "css", "browser-sync"], function() {
+gulp.task("default", ["javascript", "css", "browser-sync"], () => {
   gulp.watch(["src/**/*.js", "server.js", "routes.js", "index.jade"], ["javascript"]);
   gulp.watch("scss/*.scss", ["css"]);
 });
