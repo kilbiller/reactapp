@@ -27,7 +27,10 @@ var schema = new mongoose.Schema({
     title: String,
     airDate: Date
   }],
-  slug: String
+  slug: {
+    type: String,
+    unique: true
+  }
 });
 
 schema.pre("save", function(next) {

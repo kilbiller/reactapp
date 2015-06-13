@@ -61,7 +61,7 @@ export default class AnimesShow extends React.Component {
       return(
         <div>
           <button className="btn waves-effect waves-light" onClick={this.deleteAnime}>Delete</button>
-           hello
+          &nbsp;
           <button className="btn waves-effect waves-light" onClick={this.editAnime}>Edit</button>
           <AnimeDetails anime={this.state.anime}/>
         </div>

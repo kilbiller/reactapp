@@ -16,7 +16,7 @@ export default Reflux.createStore({
     this.trigger(this.animes);
   },
   onRefreshStoreFailed: function(payload) {
-    console.log("Error during refreshing.");
+    console.log("Error during refreshing : " + payload);
   },
   onAddAnime: function() {
     console.log("Adding an anime...");
@@ -26,8 +26,7 @@ export default Reflux.createStore({
     this.trigger(payload);
   },
   onAddAnimeFailed: function(payload) {
-    console.log("Error during addAnime.");
-    console.log(payload.error);
+    console.log("Error during addAnime : " + payload.error);
   },
   onDeleteAnime: function() {
     console.log("Deleting an Anime...");
@@ -37,7 +36,6 @@ export default Reflux.createStore({
     this.trigger(payload);
   },
   onDeleteAnimeFailed: function(payload) {
-    console.log("Error during deleteAnime.");
-    console.log(payload);
+    console.log("Error during deleteAnime : " + payload);
   }
 });
