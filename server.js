@@ -1,29 +1,47 @@
 require("babel/register");
 
 var express = require("express");
-var morgan = require("morgan");
+var logger = require("morgan");
 var bodyParser = require("body-parser");
 //var path = require("path");
-var mongoose = require("mongoose");
-var Anime = require("./models/Anime");
-
 var React = require("react");
 var Router = require("react-router");
 var routes = require("./routes");
+var mongoose = require("mongoose");
+var passport = require("passport");
+var LocalStrategy = require("passport-local").Strategy;
 
+// Models
+var Anime = require("./models/Anime");
+var User = require("./models/User");
+
+// MongoDB connection
 mongoose.connect("mongodb://localhost/reactapp");
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
+
+// Passport config
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 var app = express();
 
 app.set("views", "./");
 app.set("view engine", "jade");
 
-app.use(express.static(__dirname));
+app.use(logger("dev"));
 app.use(bodyParser.json());
-app.use(morgan("dev"));
+app.use(require("express-session")({
+  secret: "reactapp",
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.static(__dirname));
 
+// Anime
 app.get("/api/anime", function(req, res) {
   Anime.find(function(err, animes) {
     if(err) {
@@ -76,6 +94,12 @@ app.post("/api/anime", function(req, res) {
 });
 
 app.delete("/api/anime/:anime", function(req, res) {
+  if(!req.isAuthenticated()) {
+    return res.status(401).json({
+      status: 401,
+      error: "Need to be authenticated"
+    });
+  }
   Anime.findOneAndRemove({
     title: req.params.anime
   }, function(err) {
@@ -85,6 +109,46 @@ app.delete("/api/anime/:anime", function(req, res) {
     res.status(200).json({
       status: 200
     });
+  });
+});
+
+// Register
+app.post("/api/register", function(req, res) {
+  User.register(new User({
+    username: req.body.username
+  }), req.body.password, function(err, user) {
+    if(err) {
+      return res.status(400).json({
+        status: 400,
+        error: err.message
+      });
+    }
+    passport.authenticate("local")(req, res, function() {
+      res.status(201).json({
+        status: 201,
+        user: req.user
+      });
+    });
+  });
+});
+
+// Login
+app.post("/api/login", function(req, res) {
+  passport.authenticate("local")(req, res, function() {
+    res.status(200).json({
+      status: 200,
+      user: req.user
+    });
+  });
+});
+
+// Logout
+app.get("/api/logout", function(req, res) {
+  if(req.isAuthenticated()) {
+    req.logout();
+  }
+  res.status(200).json({
+    status: 200
   });
 });
 

@@ -41,7 +41,7 @@ Actions.deleteAnime.listen(function(title) {
       if(!err) {
         Actions.deleteAnime.completed(JSON.parse(res.text));
       } else {
-        Actions.deleteAnime.failed(err);
+        Actions.deleteAnime.failed(JSON.parse(res.text));
       }
     });
 });

@@ -36,6 +36,6 @@ export default Reflux.createStore({
     this.trigger(payload);
   },
   onDeleteAnimeFailed: function(payload) {
-    console.log("Error during deleteAnime : " + payload);
+    console.log("Error during deleteAnime : " + payload.error);
   }
 });
