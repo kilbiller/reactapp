@@ -18,9 +18,9 @@ Actions.register.listen(function(user) {
     .send(user)
     .end(function(err, res) {
       if(!err) {
-        Actions.register.completed(JSON.parse(res.text));
+        Actions.register.completed(res.body);
       } else {
-        Actions.register.failed(JSON.parse(res.text));
+        Actions.register.failed(res.body);
       }
     });
 });
@@ -30,9 +30,9 @@ Actions.login.listen(function(user) {
     .send(user)
     .end(function(err, res) {
       if(!err) {
-        Actions.login.completed(JSON.parse(res.text));
+        Actions.login.completed(res.body);
       } else {
-        Actions.login.failed(JSON.parse(res.text));
+        Actions.login.failed(res.body);
       }
     });
 });
@@ -41,9 +41,9 @@ Actions.logout.listen(function() {
   request.get("/api/logout")
     .end(function(err, res) {
       if(!err) {
-        Actions.logout.completed(JSON.parse(res.text));
+        Actions.logout.completed(res.body);
       } else {
-        Actions.logout.failed(JSON.parse(res.text));
+        Actions.logout.failed(res.body);
       }
     });
 });
