@@ -18,12 +18,12 @@ import sourcemaps from "gulp-sourcemaps";
 
 gulp.task("javascript", () => {
   var b = browserify({
-      entries: "./src/main.js",
-      debug: true,
-      transform: [babelify]
-    });
+    entries: "./src/main.js",
+    debug: true,
+    transform: [babelify]
+  });
 
-    return b.bundle()
+  return b.bundle()
     .pipe(source("app.js"))
     .pipe(buffer())
     .pipe(sourcemaps.init({
