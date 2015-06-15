@@ -1,4 +1,5 @@
 import Reflux from "reflux";
+import log from "loglevel";
 
 import AnimeActions from "../actions/AnimeActions";
 
@@ -8,34 +9,34 @@ export default Reflux.createStore({
     this.animes = [];
   },
   onRefreshStore: function() {
-    console.log("Refreshing store...");
+    log.info("Refreshing store...");
   },
   onRefreshStoreCompleted: function(payload) {
-    console.log("Store refreshed.");
+    log.info("Store refreshed.");
     this.animes = payload;
     this.trigger(this.animes);
   },
   onRefreshStoreFailed: function(payload) {
-    console.log("Error during refreshing : " + payload);
+    log.error("Error during refreshing : " + payload.error);
   },
   onAddAnime: function() {
-    console.log("Adding an anime...");
+    log.info("Adding an anime...");
   },
   onAddAnimeCompleted: function(payload) {
-    console.log("Anime Added.");
+    log.info("Anime Added.");
     this.trigger(payload);
   },
   onAddAnimeFailed: function(payload) {
-    console.log("Error during addAnime : " + payload.error);
+    log.error("Error during addAnime : " + payload.error);
   },
   onDeleteAnime: function() {
-    console.log("Deleting an Anime...");
+    log.info("Deleting an Anime...");
   },
   onDeleteAnimeCompleted: function(payload) {
-    console.log("Anime Deleted.");
+    log.info("Anime Deleted.");
     this.trigger(payload);
   },
   onDeleteAnimeFailed: function(payload) {
-    console.log("Error during deleteAnime : " + payload.error);
+    log.error("Error during deleteAnime : " + payload.error);
   }
 });

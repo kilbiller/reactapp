@@ -46,3 +46,7 @@ export default class AnimeDetails extends React.Component {
     );
   }
 }
+
+AnimeDetails.propTypes = {
+  anime: React.PropTypes.object.isRequired
+};

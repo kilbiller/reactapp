@@ -1,4 +1,5 @@
 import Reflux from "reflux";
+import log from "loglevel";
 
 import LoginActions from "../actions/LoginActions";
 
@@ -8,35 +9,35 @@ export default Reflux.createStore({
     this.user = null;
   },
   onRegister: function() {
-    console.log("Registering User...");
+    log.info("Registering User...");
   },
   onRegisterCompleted: function(payload) {
-    console.log("Registration successful.");
+    log.info("Registration successful.");
     this.user = payload.user;
     this.trigger(this.user);
   },
   onRegisterFailed: function(payload) {
-    console.log("Error during registration : " + payload.error);
+    log.error("Error during registration : " + payload.error);
   },
   onLogin: function() {
-    console.log("Login User...");
+    log.info("Login User...");
   },
   onLoginCompleted: function(payload) {
-    console.log("Login successful.");
+    log.info("Login successful.");
     this.user = payload.user;
     this.trigger(this.user);
   },
   onLoginFailed: function(payload) {
-    console.log("Error during Login : " + payload.error);
+    log.error("Error during Login : " + payload.error);
   },
   onLogout: function() {
-    console.log("Login out...");
+    log.info("Login out...");
   },
   onLogoutCompleted: function(payload) {
-    console.log("Logout successful.");
+    log.info("Logout successful.");
     this.trigger(this.user);
   },
   onLogoutFailed: function(payload) {
-    console.log("Error during logout : " + payload.error);
+    log.error("Error during logout : " + payload.error);
   }
 });
