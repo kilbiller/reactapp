@@ -2,7 +2,10 @@ import Reflux from "reflux";
 import request from "superagent";
 
 var Actions = Reflux.createActions({
-  "refreshStore": {
+  "getAnimes": {
+    children: ["completed", "failed"]
+  },
+  "getAnime": {
     children: ["completed", "failed"]
   },
   "addAnime": {
@@ -13,18 +16,29 @@ var Actions = Reflux.createActions({
   }
 });
 
-Actions.refreshStore.listen(function() {
-  request.get("/api/anime").end(function(err, res) {
+Actions.getAnimes.listen(function() {
+  request.get("/api/animes").end(function(err, res) {
     if(!err) {
-      Actions.refreshStore.completed(res.body);
+      Actions.getAnimes.completed(res.body);
     } else {
-      Actions.refreshStore.failed(err);
+      Actions.getAnimes.failed(err);
     }
   });
 });
 
+Actions.getAnime.listen(function(slug) {
+  request.get("/api/animes/" + slug)
+    .end(function(err, res) {
+      if(!err) {
+        Actions.getAnime.completed(res.body);
+      } else {
+        Actions.getAnime.failed(res.body);
+      }
+    });
+});
+
 Actions.addAnime.listen(function(anime) {
-  request.post("/api/anime")
+  request.post("/api/animes")
     .send(anime)
     .end(function(err, res) {
       if(!err) {
@@ -36,7 +50,7 @@ Actions.addAnime.listen(function(anime) {
 });
 
 Actions.deleteAnime.listen(function(title) {
-  request.del("/api/anime/" + title)
+  request.del("/api/animes/" + title)
     .end(function(err, res) {
       if(!err) {
         Actions.deleteAnime.completed(res.body);

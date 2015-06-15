@@ -28,7 +28,7 @@ export default class Animes extends React.Component {
 
   componentDidMount() {
     this.unsubscribe = AnimeStore.listen(this.onAnimeUpdated);
-    AnimeActions.refreshStore();
+    AnimeActions.getAnimes();
   }
 
   componentWillUnmount() {

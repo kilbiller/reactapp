@@ -1,5 +1,6 @@
 import Reflux from "reflux";
 import log from "loglevel";
+import find from "lodash/collection/find";
 
 import AnimeActions from "../actions/AnimeActions";
 
@@ -7,17 +8,34 @@ export default Reflux.createStore({
   init: function() {
     this.listenToMany(AnimeActions);
     this.animes = [];
+
+    this.getAnimeBySlug = function(slug) {
+      var anime = find(this.animes, {
+        slug: slug
+      });
+      return anime;
+    };
   },
-  onRefreshStore: function() {
-    log.info("Refreshing store...");
+  onGetAnimes: function() {
+    log.info("Getting all animes...");
   },
-  onRefreshStoreCompleted: function(payload) {
-    log.info("Store refreshed.");
+  onGetAnimesCompleted: function(payload) {
+    log.info("All animes loaded.");
     this.animes = payload;
     this.trigger(this.animes);
   },
-  onRefreshStoreFailed: function(payload) {
-    log.error("Error during refreshing : " + payload.error);
+  onGetAnimesFailed: function(payload) {
+    log.error("Error during getAnimes : " + payload.error);
+  },
+  onGetAnime: function() {
+    log.info("Getting an anime...");
+  },
+  onGetAnimeCompleted: function(payload) {
+    log.info("Anime loaded.");
+    this.trigger(payload);
+  },
+  onGetAnimeFailed: function(payload) {
+    log.error("Error during getAnime : " + payload.error);
   },
   onAddAnime: function() {
     log.info("Adding an anime...");

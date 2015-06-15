@@ -16,15 +16,26 @@ import buffer from "vinyl-buffer";
 import gutil from "gulp-util";
 import sourcemaps from "gulp-sourcemaps";
 
+var js = {
+  entryFile: "./client/main.js",
+  destDir: "./build/",
+  destFile: "app.js"
+};
+
+var css = {
+  entryFile: "scss/app.scss",
+  destDir: "./build"
+};
+
 gulp.task("javascript", () => {
   var b = browserify({
-    entries: "./src/main.js",
+    entries: js.entryFile,
     debug: true,
     transform: [babelify]
   });
 
   return b.bundle()
-    .pipe(source("app.js"))
+    .pipe(source(js.destFile))
     .pipe(buffer())
     .pipe(sourcemaps.init({
       loadMaps: true
@@ -32,19 +43,19 @@ gulp.task("javascript", () => {
     .pipe(uglify())
     .on("error", gutil.log)
     .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest("./build/"))
+    .pipe(gulp.dest(js.destDir))
     .pipe(browserSync.reload({
       stream: true
     }));
 });
 
 gulp.task("css", () => {
-  gulp.src("scss/app.scss")
+  gulp.src(css.entryFile)
     .pipe(sass())
     .pipe(postcss([autoprefixer({
       browsers: ["last 2 version"]
     })]))
-    .pipe(gulp.dest("./build"))
+    .pipe(gulp.dest(css.destDir))
     .pipe(reload({
       stream: true
     }));
@@ -60,7 +71,7 @@ gulp.task("browser-sync", ["nodemon"], () => {
 gulp.task("nodemon", (cb) => {
   var called = false;
   return nodemon({
-    script: "server.js"
+    script: "index.js"
   }).on("start", () => {
     if(!called) {
       called = true;
@@ -75,6 +86,6 @@ gulp.task("clean", (cb) => {
 });
 
 gulp.task("default", ["javascript", "css", "browser-sync"], () => {
-  gulp.watch(["src/**/*.js", "server.js", "routes.js", "index.jade"], ["javascript"]);
+  gulp.watch(["client/**/*.js", "server/**/*.js", "index.jade"], ["javascript"]);
   gulp.watch("scss/*.scss", ["css"]);
 });

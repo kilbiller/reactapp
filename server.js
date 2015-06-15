@@ -6,7 +6,7 @@ var bodyParser = require("body-parser");
 //var path = require("path");
 var React = require("react");
 var Router = require("react-router");
-var routes = require("./routes");
+var clientRoutes = require("./client/routes");
 var mongoose = require("mongoose");
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
@@ -42,7 +42,7 @@ app.use(passport.session());
 app.use(express.static(__dirname));
 
 // Anime
-app.get("/api/anime", function(req, res) {
+app.get("/api/animes", function(req, res) {
   Anime.find(function(err, animes) {
     if(err) {
       return console.error(err);
@@ -51,7 +51,28 @@ app.get("/api/anime", function(req, res) {
   });
 });
 
-app.post("/api/anime", function(req, res) {
+app.get("/api/animes/:slug", function(req, res) {
+  Anime.findOne({
+      slug: req.params.slug
+    },
+    function(err, anime) {
+      if(err) {
+        return res.status(400).json({
+          status: 400,
+          error: err.message
+        });
+      }
+      if(anime === null) {
+        return res.status(400).json({
+          status: 400,
+          error: "Anime does not exists."
+        });
+      }
+      res.status(200).json(anime);
+    });
+});
+
+app.post("/api/animes", function(req, res) {
   var anime = new Anime({
     title: req.body.title,
     year: req.body.year,
@@ -93,7 +114,7 @@ app.post("/api/anime", function(req, res) {
   });
 });
 
-app.delete("/api/anime/:anime", function(req, res) {
+app.delete("/api/animes/:anime", function(req, res) {
   if(!req.isAuthenticated()) {
     return res.status(401).json({
       status: 401,
@@ -104,10 +125,14 @@ app.delete("/api/anime/:anime", function(req, res) {
     title: req.params.anime
   }, function(err) {
     if(err) {
-      return console.error(err);
+      return res.status(400).json({
+        status: 400,
+        error: err.message
+      });
     }
     res.status(200).json({
-      status: 200
+      status: 200,
+      action: "animeDeleted"
     });
   });
 });
@@ -162,7 +187,7 @@ app.get("*", function(req, res) {
 
   var router = Router.create({
     location: req.url,
-    routes: routes
+    routes: clientRoutes
   });
   router.run(function(Handler) {
     var elem = React.createElement(Handler);
@@ -173,4 +198,4 @@ app.get("*", function(req, res) {
   });
 });
 
-app.listen(8000);
+module.exports = app;

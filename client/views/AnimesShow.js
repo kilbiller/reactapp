@@ -1,5 +1,5 @@
 import React from "react";
-import find from "lodash/collection/find";
+import log from "loglevel";
 
 // Stores
 import AnimeStore from "../stores/AnimeStore";
@@ -16,7 +16,6 @@ export default class AnimesShow extends React.Component {
 
     this.state = {
       anime: null
-        // TODO: remove that and create an action for single request
     };
 
     // Bindings
@@ -26,22 +25,18 @@ export default class AnimesShow extends React.Component {
   }
 
   onAnimeUpdated(payload) {
-    var anime = find(payload, {
-      slug: this.props.params.anime
-    });
-
-    this.setState({
-      anime: anime
-    });
-
-    if(payload.status === 200) {
+    if(payload.action === "animeDeleted") {
       this.context.router.transitionTo("/");
+    } else {
+      this.setState({
+        anime: payload
+      });
     }
   }
 
   componentDidMount() {
     this.unsubscribe = AnimeStore.listen(this.onAnimeUpdated);
-    AnimeActions.refreshStore();
+    AnimeActions.getAnime(this.props.params.slug);
   }
 
   componentWillUnmount() {
