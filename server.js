@@ -10,6 +10,8 @@ var clientRoutes = require("./client/routes");
 var mongoose = require("mongoose");
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
+var session = require("express-session");
+var MongoStore = require("connect-mongo")(session);
 
 // Models
 var Anime = require("./models/Anime");
@@ -32,10 +34,13 @@ app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(bodyParser.json());
-app.use(require("express-session")({
+app.use(session({
   secret: "reactapp",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: db
+  })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -118,7 +123,7 @@ app.delete("/api/animes/:anime", function(req, res) {
   if(!req.isAuthenticated()) {
     return res.status(401).json({
       status: 401,
-      error: "Need to be authenticated"
+      error: "Needs to be authenticated"
     });
   }
   Anime.findOneAndRemove({
