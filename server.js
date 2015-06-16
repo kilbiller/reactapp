@@ -50,7 +50,10 @@ app.use(express.static(__dirname));
 app.get("/api/animes", function(req, res) {
   Anime.find(function(err, animes) {
     if(err) {
-      return console.error(err);
+      return res.status(404).json({
+        status: 404,
+        error: err.message
+      });
     }
     res.send(animes);
   });
@@ -62,8 +65,8 @@ app.get("/api/animes/:slug", function(req, res) {
     },
     function(err, anime) {
       if(err) {
-        return res.status(400).json({
-          status: 400,
+        return res.status(404).json({
+          status: 404,
           error: err.message
         });
       }
