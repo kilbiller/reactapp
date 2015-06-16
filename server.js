@@ -47,40 +47,33 @@ app.use(passport.session());
 app.use(express.static(__dirname));
 
 // Anime
-app.get("/api/animes", function(req, res) {
+app.get("/api/animes", function(req, res, next) {
   Anime.find(function(err, animes) {
     if(err) {
-      return res.status(404).json({
-        status: 404,
-        error: err.message
-      });
+      return next(err);
     }
     res.send(animes);
   });
 });
 
-app.get("/api/animes/:slug", function(req, res) {
+app.get("/api/animes/:slug", function(req, res, next) {
   Anime.findOne({
       slug: req.params.slug
     },
     function(err, anime) {
       if(err) {
-        return res.status(404).json({
-          status: 404,
-          error: err.message
-        });
+        return next(err);
       }
       if(anime === null) {
-        return res.status(400).json({
-          status: 400,
-          error: "Anime does not exists."
-        });
+        var error = new Error("Anime does not exists.");
+        error.status = 404;
+        return next(error);
       }
       res.status(200).json(anime);
     });
 });
 
-app.post("/api/animes", function(req, res) {
+app.post("/api/animes", function(req, res, next) {
   var anime = new Anime({
     title: req.body.title,
     year: req.body.year,
@@ -109,10 +102,7 @@ app.post("/api/animes", function(req, res) {
 
   anime.save(function(err, item) {
     if(err) {
-      return res.status(400).json({
-        status: 400,
-        error: err.message
-      });
+      return next(err);
     }
     res.status(201).json({
       status: 201,
@@ -122,21 +112,17 @@ app.post("/api/animes", function(req, res) {
   });
 });
 
-app.delete("/api/animes/:anime", function(req, res) {
+app.delete("/api/animes/:anime", function(req, res, next) {
   if(!req.isAuthenticated()) {
-    return res.status(401).json({
-      status: 401,
-      error: "Needs to be authenticated"
-    });
+    var error = new Error("Needs to be authenticated");
+    error.status = 401;
+    return next(error);
   }
   Anime.findOneAndRemove({
     title: req.params.anime
   }, function(err) {
     if(err) {
-      return res.status(400).json({
-        status: 400,
-        error: err.message
-      });
+      return next(err);
     }
     res.status(200).json({
       status: 200
@@ -145,15 +131,12 @@ app.delete("/api/animes/:anime", function(req, res) {
 });
 
 // Register
-app.post("/api/register", function(req, res) {
+app.post("/api/register", function(req, res, next) {
   User.register(new User({
     username: req.body.username
   }), req.body.password, function(err, user) {
     if(err) {
-      return res.status(400).json({
-        status: 400,
-        error: err.message
-      });
+      return next(err);
     }
     passport.authenticate("local")(req, res, function() {
       res.status(201).json({
@@ -181,6 +164,16 @@ app.get("/api/logout", function(req, res) {
   }
   res.status(200).json({
     status: 200
+  });
+});
+
+// client error handling
+app.use(function(err, req, res, next) {
+  res.status(err.status || 400);
+  console.error("Error " + res.statusCode + ": " + err.message);
+  return res.json({
+    status: res.statusCode,
+    error: err.message
   });
 });
 
