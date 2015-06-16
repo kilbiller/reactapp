@@ -3,7 +3,6 @@ require("babel/register");
 var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
-//var path = require("path");
 var React = require("react");
 var Router = require("react-router");
 var clientRoutes = require("./client/routes");
@@ -14,7 +13,6 @@ var session = require("express-session");
 var MongoStore = require("connect-mongo")(session);
 
 // Models
-var Anime = require("./models/Anime");
 var User = require("./models/User");
 
 // MongoDB connection
@@ -46,126 +44,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(__dirname));
 
-// Anime
-app.get("/api/animes", function(req, res, next) {
-  Anime.find(function(err, animes) {
-    if(err) {
-      return next(err);
-    }
-    res.send(animes);
-  });
-});
-
-app.get("/api/animes/:slug", function(req, res, next) {
-  Anime.findOne({
-      slug: req.params.slug
-    },
-    function(err, anime) {
-      if(err) {
-        return next(err);
-      }
-      if(anime === null) {
-        var error = new Error("Anime does not exists.");
-        error.status = 404;
-        return next(error);
-      }
-      res.status(200).json(anime);
-    });
-});
-
-app.post("/api/animes", function(req, res, next) {
-  var anime = new Anime({
-    title: req.body.title,
-    year: req.body.year,
-    image: "http://cdn.myanimelist.net/images/anime/8/33713l.jpg",
-    alternativeTitles: [{
-      language: "japanese",
-      title: "test_title"
-    }],
-    synopsis: req.body.synopsis,
-    status: "Finished Airing",
-    airStart: "Oct 14, 2011",
-    airEnd: "Mar 23, 2012",
-    producers: ["Production I.G", "Aniplex", "Dentsu", "FUNimation Entertainment", "Movic", "Fuji TV", "Fuji Pacific Music Publishing"],
-    genres: ["Action", "Drama", "Sci-Fi", "Shounen", "Super Power"],
-    duration: "24 min. per episode",
-    episodes: [{
-      number: 1,
-      title: "Outbreak:Genesis",
-      airDate: "Oct 13, 2011 (JST)"
-    }, {
-      number: 2,
-      title: "The Fittest:Survival of the Fittest",
-      airDate: "Oct 20, 2011 (JST)"
-    }]
-  });
-
-  anime.save(function(err, item) {
-    if(err) {
-      return next(err);
-    }
-    res.status(201).json({
-      status: 201,
-      url: "http://" + req.hostname + "/animes/" + item.slug,
-      slug: item.slug
-    });
-  });
-});
-
-app.delete("/api/animes/:anime", function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    var error = new Error("Needs to be authenticated");
-    error.status = 401;
-    return next(error);
-  }
-  Anime.findOneAndRemove({
-    title: req.params.anime
-  }, function(err) {
-    if(err) {
-      return next(err);
-    }
-    res.status(200).json({
-      status: 200
-    });
-  });
-});
-
-// Register
-app.post("/api/register", function(req, res, next) {
-  User.register(new User({
-    username: req.body.username
-  }), req.body.password, function(err, user) {
-    if(err) {
-      return next(err);
-    }
-    passport.authenticate("local")(req, res, function() {
-      res.status(201).json({
-        status: 201,
-        user: req.user
-      });
-    });
-  });
-});
-
-// Login
-app.post("/api/login", function(req, res) {
-  passport.authenticate("local")(req, res, function() {
-    res.status(200).json({
-      status: 200,
-      user: req.user
-    });
-  });
-});
-
-// Logout
-app.get("/api/logout", function(req, res) {
-  if(req.isAuthenticated()) {
-    req.logout();
-  }
-  res.status(200).json({
-    status: 200
-  });
-});
+// server routing
+app.use(require("./routes/api"));
 
 // client error handling
 app.use(function(err, req, res, next) {
@@ -178,7 +58,7 @@ app.use(function(err, req, res, next) {
 });
 
 // Server side rendering to speed up load (then app.js in index.jade takes over as client side-rendering)
-app.get("*", function(req, res) {
+app.use(function(req, res) {
   // handle unwanted requests
   if(req.url === "/favicon.ico") {
     res.status(200).set("Content-Type", "image/x-icon").end();

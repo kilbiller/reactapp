@@ -11,7 +11,9 @@
   "rules": {
     "strict": [2, "global"],
     "space-return-throw-case": 0,
-    "no-unused-vars": 1
+    "no-unused-vars": 1,
+    "new-cap": 1,
+    "no-shadow": 0
   },
   "plugins": [
     "react"
