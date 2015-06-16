@@ -15,33 +15,22 @@ export default class Register extends React.Component {
 
     // Bindings
     this.onLoginUpdated = this.onLoginUpdated.bind(this);
-    //this.loginUser = this.loginUser.bind(this);
   }
 
   onLoginUpdated(data) {
     this.setState({
       data: data
     });
-    this.context.router.transitionTo("/");
   }
 
   componentDidMount() {
     this.unsubscribe = LoginStore.listen(this.onLoginUpdated);
-    LoginActions.logout();
+    LoginActions.logout(this.context.router);
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
-
-  /*loginUser(e) {
-    e.preventDefault();
-    var user = {
-      username: React.findDOMNode(this.refs.username).value.trim(),
-      password: React.findDOMNode(this.refs.password).value.trim()
-    };
-    LoginActions.login(user);
-  }*/
 
   render() {
     return(

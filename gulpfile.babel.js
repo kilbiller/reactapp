@@ -43,11 +43,10 @@ gulp.task("javascript", () => {
     .pipe(uglify())
     .on("error", gutil.log)
     .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest(js.destDir))
-    .pipe(browserSync.reload({
-      stream: true
-    }));
+    .pipe(gulp.dest(js.destDir));
 });
+
+gulp.task("javascript-reload", ["javascript"], browserSync.reload);
 
 gulp.task("css", () => {
   gulp.src(css.entryFile)
@@ -86,6 +85,6 @@ gulp.task("clean", (cb) => {
 });
 
 gulp.task("default", ["javascript", "css", "browser-sync"], () => {
-  gulp.watch(["client/**/*.js", "server/**/*.js", "index.jade"], ["javascript"]);
+  gulp.watch(["client/**/*.js", "server/**/*.js", "index.jade"], ["javascript-reload"]);
   gulp.watch("scss/*.scss", ["css"]);
 });

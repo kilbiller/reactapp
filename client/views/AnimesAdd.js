@@ -12,7 +12,6 @@ export default class AnimesAdd extends React.Component {
     this.state = {
       data: null
     };
-
     // Bindings
     this.onAnimeUpdated = this.onAnimeUpdated.bind(this);
     this.addAnime = this.addAnime.bind(this);
@@ -22,10 +21,6 @@ export default class AnimesAdd extends React.Component {
     this.setState({
       data: data
     });
-
-    if(this.state.data) {
-      this.context.router.transitionTo("/animes/" + this.state.data.slug);
-    }
   }
 
   componentDidMount() {
@@ -43,7 +38,7 @@ export default class AnimesAdd extends React.Component {
       year: React.findDOMNode(this.refs.year).value.trim(),
       synopsis: React.findDOMNode(this.refs.synopsis).value.trim()
     };
-    AnimeActions.addAnime(anime);
+    AnimeActions.addAnime(anime, this.context.router);
   }
 
   render() {

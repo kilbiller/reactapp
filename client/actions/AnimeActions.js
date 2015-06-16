@@ -37,23 +37,23 @@ Actions.getAnime.listen(function(slug) {
     });
 });
 
-Actions.addAnime.listen(function(anime) {
+Actions.addAnime.listen(function(anime, router) {
   request.post("/api/animes")
     .send(anime)
     .end(function(err, res) {
       if(!err) {
-        Actions.addAnime.completed(res.body);
+        Actions.addAnime.completed(res.body, router);
       } else {
         Actions.addAnime.failed(res.body);
       }
     });
 });
 
-Actions.deleteAnime.listen(function(title) {
-  request.del("/api/animes/" + title)
+Actions.deleteAnime.listen(function(slug, router) {
+  request.del("/api/animes/" + slug)
     .end(function(err, res) {
       if(!err) {
-        Actions.deleteAnime.completed(res.body);
+        Actions.deleteAnime.completed(res.body, router);
       } else {
         Actions.deleteAnime.failed(res.body);
       }

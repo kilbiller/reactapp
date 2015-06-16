@@ -22,10 +22,6 @@ export default class Register extends React.Component {
     this.setState({
       data: data
     });
-
-    if(this.state.data) {
-      this.context.router.transitionTo("/");
-    }
   }
 
   componentDidMount() {
@@ -42,7 +38,7 @@ export default class Register extends React.Component {
       username: React.findDOMNode(this.refs.username).value.trim(),
       password: React.findDOMNode(this.refs.password).value.trim()
     };
-    LoginActions.register(user);
+    LoginActions.register(user, this.context.router);
   }
 
   render() {

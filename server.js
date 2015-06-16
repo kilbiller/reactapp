@@ -136,8 +136,7 @@ app.delete("/api/animes/:anime", function(req, res) {
       });
     }
     res.status(200).json({
-      status: 200,
-      action: "animeDeleted"
+      status: 200
     });
   });
 });
@@ -194,8 +193,8 @@ app.get("*", function(req, res) {
     location: req.url,
     routes: clientRoutes
   });
-  router.run(function(Handler) {
-    var elem = React.createElement(Handler);
+  router.run(function(Root) {
+    var elem = React.createElement(Root);
     var html = React.renderToString(elem);
     res.render("index", {
       html: html

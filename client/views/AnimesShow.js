@@ -25,13 +25,9 @@ export default class AnimesShow extends React.Component {
   }
 
   onAnimeUpdated(payload) {
-    if(payload.action === "animeDeleted") {
-      this.context.router.transitionTo("/");
-    } else {
-      this.setState({
-        anime: payload
-      });
-    }
+    this.setState({
+      anime: payload
+    });
   }
 
   componentDidMount() {
@@ -44,7 +40,7 @@ export default class AnimesShow extends React.Component {
   }
 
   deleteAnime() {
-    AnimeActions.deleteAnime(this.state.anime.title);
+    AnimeActions.deleteAnime(this.state.anime.title, this.context.router);
   }
 
   editAnime() {

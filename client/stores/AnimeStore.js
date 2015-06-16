@@ -40,9 +40,9 @@ export default Reflux.createStore({
   onAddAnime: function() {
     log.info("Adding an anime...");
   },
-  onAddAnimeCompleted: function(payload) {
+  onAddAnimeCompleted: function(payload, router) {
     log.info("Anime Added.");
-    this.trigger(payload);
+    router.transitionTo("/animes/" + payload.slug);
   },
   onAddAnimeFailed: function(payload) {
     log.error("Error during addAnime : " + payload.error);
@@ -50,9 +50,9 @@ export default Reflux.createStore({
   onDeleteAnime: function() {
     log.info("Deleting an Anime...");
   },
-  onDeleteAnimeCompleted: function(payload) {
+  onDeleteAnimeCompleted: function(payload, router) {
     log.info("Anime Deleted.");
-    this.trigger(payload);
+    router.transitionTo("/");
   },
   onDeleteAnimeFailed: function(payload) {
     log.error("Error during deleteAnime : " + payload.error);

@@ -11,10 +11,10 @@ export default Reflux.createStore({
   onRegister: function() {
     log.info("Registering User...");
   },
-  onRegisterCompleted: function(payload) {
+  onRegisterCompleted: function(payload, router) {
     log.info("Registration successful.");
     this.user = payload.user;
-    this.trigger(this.user);
+    router.transitionTo("/");
   },
   onRegisterFailed: function(payload) {
     log.error("Error during registration : " + payload.error);
@@ -22,10 +22,10 @@ export default Reflux.createStore({
   onLogin: function() {
     log.info("Login User...");
   },
-  onLoginCompleted: function(payload) {
+  onLoginCompleted: function(payload, router) {
     log.info("Login successful.");
     this.user = payload.user;
-    this.trigger(this.user);
+    router.transitionTo("/");
   },
   onLoginFailed: function(payload) {
     log.error("Error during Login : " + payload.error);
@@ -33,9 +33,9 @@ export default Reflux.createStore({
   onLogout: function() {
     log.info("Login out...");
   },
-  onLogoutCompleted: function(payload) {
+  onLogoutCompleted: function(payload, router) {
     log.info("Logout successful.");
-    this.trigger(this.user);
+    router.transitionTo("/");
   },
   onLogoutFailed: function(payload) {
     log.error("Error during logout : " + payload.error);
