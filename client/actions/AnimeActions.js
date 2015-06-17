@@ -13,6 +13,12 @@ var Actions = Reflux.createActions({
   },
   "deleteAnime": {
     children: ["completed", "failed"]
+  },
+  "addEpisode": {
+    children: ["completed", "failed"]
+  },
+  "deleteEpisode": {
+    children: ["completed", "failed"]
   }
 });
 
@@ -56,6 +62,29 @@ Actions.deleteAnime.listen(function(slug, router) {
         Actions.deleteAnime.completed(res.body, router);
       } else {
         Actions.deleteAnime.failed(res.body);
+      }
+    });
+});
+
+Actions.addEpisode.listen(function(slug, episode) {
+  request.post("/api/animes/" + slug + "/episodes")
+    .send(episode)
+    .end(function(err, res) {
+      if(!err) {
+        Actions.addEpisode.completed(res.body);
+      } else {
+        Actions.addEpisode.failed(res.body);
+      }
+    });
+});
+
+Actions.deleteEpisode.listen(function(slug, episodeNumber) {
+  request.del("/api/animes/" + slug + "/episodes/" + episodeNumber)
+    .end(function(err, res) {
+      if(!err) {
+        Actions.deleteEpisode.completed(res.body);
+      } else {
+        Actions.deleteEpisode.failed(res.body);
       }
     });
 });

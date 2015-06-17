@@ -1,7 +1,19 @@
 import mongoose from "mongoose";
 import slug from "slug";
 
-var schema = new mongoose.Schema({
+var episodeSchema = new mongoose.Schema({
+  number: {
+    type: Number,
+    required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  airDate: Date
+});
+
+var animeSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true
@@ -22,24 +34,20 @@ var schema = new mongoose.Schema({
   producers: [String],
   genres: [String],
   duration: String,
-  episodes: [{
-    number: Number,
-    title: String,
-    airDate: Date
-  }],
+  episodes: [episodeSchema],
   slug: {
     type: String,
     unique: true
   }
 });
 
-schema.pre("save", function(next) {
+animeSchema.pre("save", function(next) {
   this.slug = slug(this.title + "-" + this.year, {
     lower: true
   });
   next();
 });
 
-var Anime = mongoose.model("Anime", schema);
+var Anime = mongoose.model("Anime", animeSchema);
 
 module.exports = Anime;

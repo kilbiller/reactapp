@@ -90,6 +90,65 @@ router.delete("/api/animes/:anime", function(req, res, next) {
   });
 });
 
+// Episodes
+router.post("/api/animes/:anime/episodes", function(req, res, next) {
+  Anime.findOne({
+      slug: req.params.anime
+    },
+    function(err, anime) {
+      if(err) {
+        return next(err);
+      }
+      if(anime === null) {
+        var error = new Error("Anime does not exists.");
+        error.status = 404;
+        return next(error);
+      }
+      anime.episodes.push({
+        number: req.body.number,
+        title: req.body.title,
+        airDate: req.body.airDate
+      });
+      console.log(anime);
+
+      anime.save(function(err, anime) {
+        if(err) {
+          return next(err);
+        }
+        res.status(201).json({
+          status: 201,
+          anime: anime
+        });
+      });
+    });
+});
+
+router.delete("/api/animes/:anime/episodes/:number", function(req, res, next) {
+  Anime.findOneAndUpdate({
+      slug: req.params.anime
+    }, {
+      $pull: {
+        "episodes": {
+          number: req.params.number
+        }
+      }
+    }, {
+      safe: true,
+      upsert: true,
+      new: true
+    },
+    function(err, anime) {
+      if(err) {
+        return next(err);
+      }
+      res.status(200).json({
+        status: 200,
+        anime: anime
+      });
+    }
+  );
+});
+
 // Register
 router.post("/api/register", function(req, res, next) {
   User.register(new User({

@@ -24,9 +24,9 @@ export default class AnimesShow extends React.Component {
     this.editAnime = this.editAnime.bind(this);
   }
 
-  onAnimeUpdated(payload) {
+  onAnimeUpdated(anime) {
     this.setState({
-      anime: payload
+      anime: anime
     });
   }
 

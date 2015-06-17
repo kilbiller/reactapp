@@ -17,7 +17,7 @@ export default Reflux.createStore({
     router.transitionTo("/");
   },
   onRegisterFailed: function(payload) {
-    log.error("Error during registration : " + payload.error);
+    log.error("Error : " + payload.error);
   },
   onLogin: function() {
     log.info("Login User...");
@@ -28,7 +28,7 @@ export default Reflux.createStore({
     router.transitionTo("/");
   },
   onLoginFailed: function(payload) {
-    log.error("Error during Login : " + payload.error);
+    log.error("Error : " + payload.error);
   },
   onLogout: function() {
     log.info("Login out...");
@@ -38,6 +38,6 @@ export default Reflux.createStore({
     router.transitionTo("/");
   },
   onLogoutFailed: function(payload) {
-    log.error("Error during logout : " + payload.error);
+    log.error("Error : " + payload.error);
   }
 });

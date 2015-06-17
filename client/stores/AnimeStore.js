@@ -8,6 +8,7 @@ export default Reflux.createStore({
   init: function() {
     this.listenToMany(AnimeActions);
     this.animes = [];
+    this.anime = null;
 
     this.getAnimeBySlug = function(slug) {
       var anime = find(this.animes, {
@@ -25,7 +26,7 @@ export default Reflux.createStore({
     this.trigger(this.animes);
   },
   onGetAnimesFailed: function(payload) {
-    log.error("Error during getAnimes : " + payload.error);
+    log.error("Error : " + payload.error);
   },
   onGetAnime: function() {
     log.info("Getting an anime...");
@@ -35,7 +36,7 @@ export default Reflux.createStore({
     this.trigger(payload);
   },
   onGetAnimeFailed: function(payload) {
-    log.error("Error during getAnime : " + payload.error);
+    log.error("Error : " + payload.error);
   },
   onAddAnime: function() {
     log.info("Adding an anime...");
@@ -45,7 +46,7 @@ export default Reflux.createStore({
     router.transitionTo("/animes/" + payload.slug);
   },
   onAddAnimeFailed: function(payload) {
-    log.error("Error during addAnime : " + payload.error);
+    log.error("Error : " + payload.error);
   },
   onDeleteAnime: function() {
     log.info("Deleting an Anime...");
@@ -55,6 +56,26 @@ export default Reflux.createStore({
     router.transitionTo("/");
   },
   onDeleteAnimeFailed: function(payload) {
-    log.error("Error during deleteAnime : " + payload.error);
-  }
+    log.error("Error : " + payload.error);
+  },
+  onDeleteEpisode: function() {
+    log.info("Deleting an Episode...");
+  },
+  onDeleteEpisodeCompleted: function(payload) {
+    log.info("Episode Deleted.");
+    this.trigger(payload.anime);
+  },
+  onDeleteEpisodeFailed: function(payload) {
+    log.error("Error : " + payload.error);
+  },
+  onAddEpisode: function() {
+    log.info("Adding an episode...");
+  },
+  onAddEpisodeCompleted: function(payload) {
+    log.info("Episode Added.");
+    this.trigger(payload.anime);
+  },
+  onAddEpisodeFailed: function(payload) {
+    log.error("Error : " + payload.error);
+  },
 });
