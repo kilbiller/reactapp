@@ -11,6 +11,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var session = require("express-session");
 var MongoStore = require("connect-mongo")(session);
+var cookieParser = require("cookie-parser");
 
 // Models
 var User = require("./models/User");
@@ -21,9 +22,9 @@ var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 
 // Passport config
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(User.authenticate));
+passport.serializeUser(User.serializeUser);
+passport.deserializeUser(User.deserializeUser);
 
 var app = express();
 
@@ -31,6 +32,8 @@ app.set("views", "./");
 app.set("view engine", "jade");
 
 app.use(logger("dev"));
+app.use(express.static(__dirname));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(session({
   secret: "reactapp",
@@ -42,7 +45,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(__dirname));
 
 // server routing
 app.use(require("./routes/api"));

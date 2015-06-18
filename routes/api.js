@@ -1,5 +1,6 @@
 var express = require("express");
 var passport = require("passport");
+var bcrypt = require("bcrypt");
 
 var Anime = require("../models/Anime");
 var User = require("../models/User");
@@ -24,7 +25,7 @@ router.get("/api/animes/:slug", function(req, res, next) {
       if(err) {
         return next(err);
       }
-      if(anime === null) {
+      if(!anime) {
         var error = new Error("Anime does not exists.");
         error.status = 404;
         return next(error);
@@ -99,7 +100,7 @@ router.post("/api/animes/:anime/episodes", function(req, res, next) {
       if(err) {
         return next(err);
       }
-      if(anime === null) {
+      if(!anime) {
         var error = new Error("Anime does not exists.");
         error.status = 404;
         return next(error);
@@ -151,9 +152,12 @@ router.delete("/api/animes/:anime/episodes/:number", function(req, res, next) {
 
 // Register
 router.post("/api/register", function(req, res, next) {
-  User.register(new User({
-    username: req.body.username
-  }), req.body.password, function(err, user) {
+  var user = new User({
+    username: req.body.username,
+    password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+  });
+
+  user.save(function(err, user) {
     if(err) {
       return next(err);
     }
@@ -178,9 +182,7 @@ router.post("/api/login", function(req, res) {
 
 // Logout
 router.get("/api/logout", function(req, res) {
-  if(req.isAuthenticated()) {
-    req.logout();
-  }
+  req.logout();
   res.status(200).json({
     status: 200
   });
