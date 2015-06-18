@@ -33,7 +33,7 @@ app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.static(__dirname));
-app.use(cookieParser());
+app.use(cookieParser("reactapp"));
 app.use(bodyParser.json());
 app.use(session({
   secret: "reactapp",
