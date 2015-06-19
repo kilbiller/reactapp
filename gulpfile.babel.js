@@ -42,19 +42,27 @@ var b = watchify(browserify({
 b.transform(babelify);
 
 gulp.task("javascript", () => {
-  return b.bundle()
-    .pipe(source(js.destFile))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({
-      loadMaps: true
-    }))
-    .pipe(uglify())
-    .on("error", gutil.log)
-    .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest(js.destDir));
-});
+  function rebundle() {
+    return b.bundle()
+      .pipe(source(js.destFile))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({
+        loadMaps: true
+      }))
+      .pipe(uglify())
+      .on("error", gutil.log)
+      .pipe(sourcemaps.write("./"))
+      .pipe(gulp.dest(js.destDir))
+      .pipe(browserSync.reload({
+        stream: true,
+        once: true
+      }));
+  }
 
-gulp.task("javascript-reload", ["javascript"], browserSync.reload);
+  b.on("update", rebundle);
+
+  return rebundle();
+});
 
 gulp.task("css", () => {
   gulp.src(css.entryFile)
@@ -74,18 +82,6 @@ gulp.task("browser-sync", ["server"], () => {
     proxy: "http://localhost:8000"
   });
 });
-
-/*gulp.task("nodemon", (cb) => {
-  var called = false;
-  return nodemon({
-    script: "index.js"
-  }).on("start", () => {
-    if(!called) {
-      called = true;
-      cb();
-    }
-  });
-});*/
 
 gulp.task("server", function() {
   if(node) {
@@ -108,7 +104,6 @@ gulp.task("clean", (cb) => {
 
 gulp.task("default", ["javascript", "css"], () => {
   gulp.run("browser-sync");
-  gulp.watch(["client/**/*.js"], ["javascript-reload"]);
-  gulp.watch(["index.js", "server.js", "index.jade", "routes/**/*.js", "models/**/*.js"], ["server"]);
+  gulp.watch(["client/**/*.js", "index.js", "server.js", "index.jade", "routes/**/*.js", "models/**/*.js"], ["server"]);
   gulp.watch("scss/*.scss", ["css"]);
 });
