@@ -1,6 +1,5 @@
 var express = require("express");
 var passport = require("passport");
-var bcrypt = require("bcrypt");
 
 var Anime = require("../models/Anime");
 var User = require("../models/User");
@@ -154,7 +153,7 @@ router.delete("/api/animes/:anime/episodes/:number", function(req, res, next) {
 router.post("/api/register", function(req, res, next) {
   var user = new User({
     username: req.body.username,
-    password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+    password: User.createHash(req.body.password)
   });
 
   user.save(function(err, user) {
@@ -183,6 +182,7 @@ router.post("/api/login", function(req, res) {
 // Logout
 router.get("/api/logout", function(req, res) {
   req.logout();
+  req.session.destroy();
   res.status(200).json({
     status: 200
   });

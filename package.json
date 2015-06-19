@@ -46,6 +46,7 @@
     "react": "^0.13.3",
     "react-router": "^0.13.3",
     "reflux": "^0.2.7",
+    "request": "^2.58.0",
     "slug": "^0.9.1",
     "superagent": "^1.2.0",
     "watchify": "^3.2.2"

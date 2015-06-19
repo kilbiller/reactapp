@@ -39,4 +39,8 @@ User.deserializeUser = function(id, done) {
   });
 };
 
+User.createHash = function(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+};
+
 module.exports = User;
