@@ -2,8 +2,14 @@ import mongoose from "mongoose";
 var bcrypt = require("bcrypt");
 
 var schema = new mongoose.Schema({
-  username: String,
-  password: String
+  username: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
 });
 
 var User = mongoose.model("User", schema);

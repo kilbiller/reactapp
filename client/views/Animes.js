@@ -1,13 +1,14 @@
 import React from "react";
+import {
+  Link
+}
+from "react-router";
 
 // Stores
 import AnimeStore from "../stores/AnimeStore";
 
 // Actions
 import AnimeActions from "../actions/AnimeActions";
-
-// Components
-import AnimeDetails from "../components/AnimeDetails";
 
 export default class Animes extends React.Component {
   constructor(props) {
@@ -38,9 +39,11 @@ export default class Animes extends React.Component {
   render() {
     return(
       <div>
-        {this.state.animes.map(function(anime, index) {
-          return <AnimeDetails anime={anime} key={index}/>;
-        })}
+        <ul>
+          {this.state.animes.map(function(anime, index) {
+            return <li key={index}><Link to={"/animes/" + anime.slug}>{anime.title}</Link></li>;
+          })}
+        </ul>
       </div>
     );
   }

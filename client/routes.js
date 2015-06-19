@@ -12,6 +12,7 @@ import AnimesAdd from "./views/AnimesAdd";
 import Register from "./views/Register";
 import Login from "./views/Login";
 import Logout from "./views/Logout";
+import Calendar from "./views/Calendar";
 
 var routes = (
   <Route name="app" path="/" handler={App}>
@@ -22,6 +23,7 @@ var routes = (
     <Route path="/register" handler={Register}/>
     <Route path="/login" handler={Login}/>
     <Route path="/logout" handler={Logout}/>
+    <Route path="/calendar" handler={Calendar}/>
   </Route>
 );
 

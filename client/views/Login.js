@@ -6,7 +6,7 @@ import LoginStore from "../stores/LoginStore";
 // Actions
 import LoginActions from "../actions/LoginActions";
 
-export default class Register extends React.Component {
+export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,6 +62,6 @@ export default class Register extends React.Component {
   }
 }
 
-Register.contextTypes = {
+Login.contextTypes = {
   router: React.PropTypes.func
 };
