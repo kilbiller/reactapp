@@ -1,5 +1,6 @@
 import Reflux from "reflux";
 import log from "loglevel";
+import Cookies from "js-cookie";
 
 import LoginActions from "../actions/LoginActions";
 
@@ -14,6 +15,8 @@ export default Reflux.createStore({
   onRegisterCompleted: function(payload, router) {
     log.info("Registration successful.");
     this.user = payload.user;
+    /*Cookies.set("username", this.user.username);
+    Cookies.set("password", this.user.password);*/
     router.transitionTo("/");
   },
   onRegisterFailed: function(payload) {
@@ -25,6 +28,8 @@ export default Reflux.createStore({
   onLoginCompleted: function(payload, router) {
     log.info("Login successful.");
     this.user = payload.user;
+    /*Cookies.set("username", this.user.username);
+    Cookies.set("password", this.user.password);*/
     router.transitionTo("/");
   },
   onLoginFailed: function(payload) {
@@ -35,6 +40,8 @@ export default Reflux.createStore({
   },
   onLogoutCompleted: function(payload, router) {
     log.info("Logout successful.");
+    /*Cookies.remove("username");
+    Cookies.remove("password");*/
     router.transitionTo("/");
   },
   onLogoutFailed: function(payload) {

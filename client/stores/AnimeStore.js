@@ -78,4 +78,24 @@ export default Reflux.createStore({
   onAddEpisodeFailed: function(payload) {
     log.error("Error : " + payload.error);
   },
+  onAddAnimeToList: function() {
+    log.info("Adding anime to list...");
+  },
+  onAddAnimeToListCompleted: function(payload) {
+    log.info("Anime added to list.");
+    //this.trigger(payload.anime);
+  },
+  onAddAnimeToListFailed: function(payload) {
+    log.error("Error : " + payload.error);
+  },
+  onRemoveAnimeFromList: function() {
+    log.info("Removing anime from list...");
+  },
+  onRemoveAnimeFromListCompleted: function(payload) {
+    log.info("Anime removed from list.");
+    //this.trigger(payload.anime);
+  },
+  onRemoveAnimeFromListFailed: function(payload) {
+    log.error("Error : " + payload.error);
+  }
 });

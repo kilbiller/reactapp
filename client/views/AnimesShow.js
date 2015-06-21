@@ -1,5 +1,4 @@
 import React from "react";
-import log from "loglevel";
 
 // Stores
 import AnimeStore from "../stores/AnimeStore";
@@ -22,6 +21,8 @@ export default class AnimesShow extends React.Component {
     this.onAnimeUpdated = this.onAnimeUpdated.bind(this);
     this.deleteAnime = this.deleteAnime.bind(this);
     this.editAnime = this.editAnime.bind(this);
+    this.addToList = this.addToList.bind(this);
+    this.removeFromList = this.removeFromList.bind(this);
   }
 
   onAnimeUpdated(anime) {
@@ -40,11 +41,19 @@ export default class AnimesShow extends React.Component {
   }
 
   deleteAnime() {
-    AnimeActions.deleteAnime(this.state.anime.title, this.context.router);
+    AnimeActions.deleteAnime(this.state.anime.slug, this.context.router);
   }
 
   editAnime() {
 
+  }
+
+  addToList() {
+    AnimeActions.addAnimeToList(this.state.anime.slug);
+  }
+
+  removeFromList() {
+    AnimeActions.removeAnimeFromList(this.state.anime.slug);
   }
 
   render() {
@@ -55,6 +64,10 @@ export default class AnimesShow extends React.Component {
           <button className="btn waves-effect waves-light" onClick={this.deleteAnime}>Delete</button>
           &nbsp;
           <button className="btn waves-effect waves-light" onClick={this.editAnime}>Edit</button>
+          &nbsp;
+          <button className="btn waves-effect waves-light" onClick={this.addToList}>Add to list</button>
+          &nbsp;
+          <button className="btn waves-effect waves-light" onClick={this.removeFromList}>Remove from List</button>
           <AnimeDetails anime={this.state.anime}/>
         </div>
       );

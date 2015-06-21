@@ -6,6 +6,15 @@ var User = require("../models/User");
 
 var router = express.Router();
 
+function isLoggedIn(req, res, next) {
+  if(!req.isAuthenticated()) {
+    var error = new Error("Needs to be authenticated");
+    error.status = 401;
+    return next(error);
+  }
+  next();
+}
+
 // Anime
 router.get("/api/animes", function(req, res, next) {
   Anime.find(function(err, animes) {
@@ -72,28 +81,46 @@ router.post("/api/animes", function(req, res, next) {
   });
 });
 
-router.delete("/api/animes/:anime", function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    var error = new Error("Needs to be authenticated");
-    error.status = 401;
-    return next(error);
-  }
-  Anime.findOneAndRemove({
-    title: req.params.anime
-  }, function(err) {
+router.delete("/api/animes/:slug", isLoggedIn, function(req, res, next) {
+  Anime.findOne({
+    slug: req.params.slug
+  }, function(err, anime) {
     if(err) {
       return next(err);
     }
-    res.status(200).json({
-      status: 200
-    });
+    User.update({
+        "animeList.anime": anime.id
+      }, {
+        $pull: {
+          "animeList": {
+            anime: anime.id
+          }
+        }
+      }, {
+        safe: true,
+        upsert: true,
+        new: true
+      },
+      function(err, user) {
+        if(err) {
+          return next(err);
+        }
+        anime.remove(function(err, anime) {
+          if(err) {
+            return next(err);
+          }
+          res.status(200).json({
+            status: 200
+          });
+        });
+      });
   });
 });
 
 // Episodes
-router.post("/api/animes/:anime/episodes", function(req, res, next) {
+router.post("/api/animes/:slug/episodes", function(req, res, next) {
   Anime.findOne({
-      slug: req.params.anime
+      slug: req.params.slug
     },
     function(err, anime) {
       if(err) {
@@ -109,7 +136,6 @@ router.post("/api/animes/:anime/episodes", function(req, res, next) {
         title: req.body.title,
         airDate: req.body.airDate
       });
-      console.log(anime);
 
       anime.save(function(err, anime) {
         if(err) {
@@ -123,9 +149,9 @@ router.post("/api/animes/:anime/episodes", function(req, res, next) {
     });
 });
 
-router.delete("/api/animes/:anime/episodes/:number", function(req, res, next) {
+router.delete("/api/animes/:slug/episodes/:number", function(req, res, next) {
   Anime.findOneAndUpdate({
-      slug: req.params.anime
+      slug: req.params.slug
     }, {
       $pull: {
         "episodes": {
@@ -185,6 +211,71 @@ router.get("/api/logout", function(req, res) {
   req.session.destroy();
   res.status(200).json({
     status: 200
+  });
+});
+
+router.post("/api/users/animes", isLoggedIn, function(req, res, next) {
+  Anime.findOne({
+    slug: req.body.slug
+  }, function(err, anime) {
+    if(err) {
+      return next(err);
+    }
+    User.findOne({
+        username: req.user.username
+      })
+      .where("animeList.anime").ne(anime.id)
+      .exec(function(err, user) {
+        if(err) {
+          return next(err);
+        }
+        if(!user) {
+          return next(new Error("Anime already in list"));
+        }
+        user.animeList.push({
+          anime: anime.id
+        });
+        user.save(function(err, user) {
+          if(err) {
+            return next(err);
+          }
+          res.status(200).json({
+            status: 200
+          });
+        });
+      });
+  });
+});
+
+router.delete("/api/users/animes/:slug", isLoggedIn, function(req, res, next) {
+  Anime.findOne({
+    slug: req.params.slug
+  }, function(err, anime) {
+    if(err) {
+      return next(err);
+    }
+    User.findOneAndUpdate({
+        username: req.user.username
+      }, {
+        $pull: {
+          "animeList": {
+            anime: anime.id
+          }
+        }
+      }, {
+        safe: true,
+        upsert: true,
+        new: true
+      },
+      function(err, user) {
+        if(err) {
+          return next(err);
+        }
+        res.status(200).json({
+          status: 200
+        });
+      }
+    );
   });
 });
 

@@ -1,7 +1,15 @@
 import mongoose from "mongoose";
 var bcrypt = require("bcrypt");
 
-var schema = new mongoose.Schema({
+var animeListSchema = new mongoose.Schema({
+  anime: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Anime"
+  },
+  episodes: [Number]
+});
+
+var userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true
@@ -9,10 +17,11 @@ var schema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  animeList: [animeListSchema]
 });
 
-var User = mongoose.model("User", schema);
+var User = mongoose.model("User", userSchema);
 
 User.authenticate = function(username, password, done) {
   User.findOne({
