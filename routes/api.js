@@ -9,8 +9,9 @@ var router = express.Router();
 
 var jwtSecret = "fdg54FDHA6dh4";
 
-function checkToken(req, res, next) {
-  var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers["x-access-token"];
+/*function checkToken(req, res, next) {
+  var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers["Authorization"];
+  // TODO: Parse Authorization header for JWT jwtKey
   if(token) {
     jwt.verify(token, jwtSecret, function(err, decoded) {
       if(err) {
@@ -32,16 +33,16 @@ function checkToken(req, res, next) {
   } else {
     return next(new Error("No token found, please authenticate"));
   }
-}
+}*/
 
-function isLoggedIn(req, res, next) {
+/*function isLoggedIn(req, res, next) {
   if(!req.isAuthenticated()) {
     var error = new Error("Needs to be authenticated");
     error.status = 401;
     return next(error);
   }
   next();
-}
+}*/
 
 // Anime
 router.get("/api/animes", function(req, res, next) {
@@ -109,7 +110,9 @@ router.post("/api/animes", function(req, res, next) {
   });
 });
 
-router.delete("/api/animes/:slug", checkToken, function(req, res, next) {
+router.delete("/api/animes/:slug", passport.authenticate("jwt", {
+  session: false
+}), function(req, res, next) {
   Anime.findOne({
     slug: req.params.slug
   }, function(err, anime) {
@@ -255,7 +258,9 @@ router.get("/api/logout", function(req, res) {
   });
 });
 
-router.post("/api/users/animes", checkToken, function(req, res, next) {
+router.post("/api/users/animes", passport.authenticate("jwt", {
+  session: false
+}), function(req, res, next) {
   Anime.findOne({
     slug: req.body.slug
   }, function(err, anime) {
@@ -288,7 +293,9 @@ router.post("/api/users/animes", checkToken, function(req, res, next) {
   });
 });
 
-router.delete("/api/users/animes/:slug", checkToken, function(req, res, next) {
+router.delete("/api/users/animes/:slug", passport.authenticate("jwt", {
+  session: false
+}), function(req, res, next) {
   Anime.findOne({
     slug: req.params.slug
   }, function(err, anime) {

@@ -9,6 +9,7 @@ var clientRoutes = require("./client/routes");
 var mongoose = require("mongoose");
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
+var JwtStrategy = require("passport-jwt").Strategy;
 
 // Models
 var User = require("./models/User");
@@ -20,6 +21,21 @@ db.on("error", console.error.bind(console, "connection error:"));
 
 // Passport config
 passport.use(new LocalStrategy(User.authenticate));
+passport.use(new JwtStrategy({
+  secretOrKey: "fdg54FDHA6dh4"
+}, function(jwtToken, done) {
+  User.findOne({
+    "_id": jwtToken.iss
+  }, function(err, user) {
+    if(err) {
+      return done(err, false);
+    }
+    if(!user) {
+      done(null, false);
+    }
+    done(null, user);
+  });
+}));
 
 var app = express();
 
