@@ -15,8 +15,7 @@ export default Reflux.createStore({
   onRegisterCompleted: function(payload, router) {
     log.info("Registration successful.");
     this.user = payload.user;
-    /*Cookies.set("username", this.user.username);
-    Cookies.set("password", this.user.password);*/
+    Cookies.set("token", payload.token);
     router.transitionTo("/");
   },
   onRegisterFailed: function(payload) {
@@ -28,8 +27,7 @@ export default Reflux.createStore({
   onLoginCompleted: function(payload, router) {
     log.info("Login successful.");
     this.user = payload.user;
-    /*Cookies.set("username", this.user.username);
-    Cookies.set("password", this.user.password);*/
+    Cookies.set("token", payload.token);
     router.transitionTo("/");
   },
   onLoginFailed: function(payload) {
@@ -40,8 +38,7 @@ export default Reflux.createStore({
   },
   onLogoutCompleted: function(payload, router) {
     log.info("Logout successful.");
-    /*Cookies.remove("username");
-    Cookies.remove("password");*/
+    Cookies.remove("token");
     router.transitionTo("/");
   },
   onLogoutFailed: function(payload) {

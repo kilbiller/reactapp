@@ -1,5 +1,6 @@
 import Reflux from "reflux";
 import request from "superagent";
+import Cookies from "js-cookie";
 
 var Actions = Reflux.createActions({
   "getAnimes": {
@@ -63,6 +64,7 @@ Actions.addAnime.listen(function(anime, router) {
 
 Actions.deleteAnime.listen(function(slug, router) {
   request.del("/api/animes/" + slug)
+    .set("x-access-token", Cookies.get("token"))
     .end(function(err, res) {
       if(!err) {
         Actions.deleteAnime.completed(res.body, router);
@@ -97,6 +99,7 @@ Actions.deleteEpisode.listen(function(slug, episodeNumber) {
 
 Actions.addAnimeToList.listen(function(slug) {
   request.post("/api/users/animes")
+    .set("x-access-token", Cookies.get("token"))
     .send({
       slug: slug
     })
@@ -111,6 +114,7 @@ Actions.addAnimeToList.listen(function(slug) {
 
 Actions.removeAnimeFromList.listen(function(slug) {
   request.del("/api/users/animes/" + slug)
+    .set("x-access-token", Cookies.get("token"))
     .end(function(err, res) {
       if(!err) {
         Actions.removeAnimeFromList.completed(res.body);

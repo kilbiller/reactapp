@@ -1,10 +1,38 @@
 var express = require("express");
 var passport = require("passport");
+var jwt = require("jsonwebtoken");
 
 var Anime = require("../models/Anime");
 var User = require("../models/User");
 
 var router = express.Router();
+
+var jwtSecret = "fdg54FDHA6dh4";
+
+function checkToken(req, res, next) {
+  var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers["x-access-token"];
+  if(token) {
+    jwt.verify(token, jwtSecret, function(err, decoded) {
+      if(err) {
+        return next(err);
+      }
+      User.findOne({
+        "_id": decoded.iss
+      }, function(err, user) {
+        if(err) {
+          return next(err);
+        }
+        if(!user) {
+          return next(new Error("User account associated with token not found"));
+        }
+        req.user = user;
+        next();
+      });
+    });
+  } else {
+    return next(new Error("No token found, please authenticate"));
+  }
+}
 
 function isLoggedIn(req, res, next) {
   if(!req.isAuthenticated()) {
@@ -81,7 +109,7 @@ router.post("/api/animes", function(req, res, next) {
   });
 });
 
-router.delete("/api/animes/:slug", isLoggedIn, function(req, res, next) {
+router.delete("/api/animes/:slug", checkToken, function(req, res, next) {
   Anime.findOne({
     slug: req.params.slug
   }, function(err, anime) {
@@ -97,11 +125,9 @@ router.delete("/api/animes/:slug", isLoggedIn, function(req, res, next) {
           }
         }
       }, {
-        safe: true,
-        upsert: true,
-        new: true
+        multi: true
       },
-      function(err, user) {
+      function(err, users) {
         if(err) {
           return next(err);
         }
@@ -186,10 +212,18 @@ router.post("/api/register", function(req, res, next) {
     if(err) {
       return next(err);
     }
-    passport.authenticate("local")(req, res, function() {
+    passport.authenticate("local", {
+      session: false
+    })(req, res, function() {
+      var token = jwt.sign({}, jwtSecret, {
+        expiresInMinutes: 60 * 24 * 7,
+        issuer: user.id
+      });
+
       res.status(201).json({
         status: 201,
-        user: req.user
+        user: req.user,
+        token: token
       });
     });
   });
@@ -197,10 +231,18 @@ router.post("/api/register", function(req, res, next) {
 
 // Login
 router.post("/api/login", function(req, res) {
-  passport.authenticate("local")(req, res, function() {
+  passport.authenticate("local", {
+    session: false
+  })(req, res, function() {
+    var token = jwt.sign({}, jwtSecret, {
+      expiresInMinutes: 60 * 24 * 7,
+      issuer: req.user.id
+    });
+
     res.status(200).json({
       status: 200,
-      user: req.user
+      user: req.user,
+      token: token
     });
   });
 });
@@ -214,7 +256,7 @@ router.get("/api/logout", function(req, res) {
   });
 });
 
-router.post("/api/users/animes", isLoggedIn, function(req, res, next) {
+router.post("/api/users/animes", checkToken, function(req, res, next) {
   Anime.findOne({
     slug: req.body.slug
   }, function(err, anime) {
@@ -247,7 +289,7 @@ router.post("/api/users/animes", isLoggedIn, function(req, res, next) {
   });
 });
 
-router.delete("/api/users/animes/:slug", isLoggedIn, function(req, res, next) {
+router.delete("/api/users/animes/:slug", checkToken, function(req, res, next) {
   Anime.findOne({
     slug: req.params.slug
   }, function(err, anime) {
