@@ -149,21 +149,22 @@ router.delete("/api/animes/:slug", passport.authenticate("jwt", {
 // Episodes
 router.post("/api/animes/:slug/episodes", function(req, res, next) {
   Anime.findOne({
-      slug: req.params.slug
+      slug: req.params.slug,
+      "episodes.number": {
+        $ne: req.body.number
+      }
     },
     function(err, anime) {
       if(err) {
         return next(err);
       }
       if(!anime) {
-        var error = new Error("Anime does not exists.");
-        error.status = 404;
-        return next(error);
+        return next(new Error("An episode with the same number already exists"));
       }
       anime.episodes.push({
         number: req.body.number,
         title: req.body.title,
-        airDate: req.body.airDate
+        airDate: new Date(req.body.airDate)
       });
 
       anime.save(function(err, anime) {

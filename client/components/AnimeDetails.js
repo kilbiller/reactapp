@@ -1,8 +1,4 @@
 import React from "react";
-import {
-  Link
-}
-from "react-router";
 
 // Components
 import Episode from "./Episode";
@@ -16,6 +12,13 @@ export default class AnimeDetails extends React.Component {
 
     // Bindings
     this.addEpisode = this.addEpisode.bind(this);
+  }
+
+  componentDidMount() {
+    $(".datepicker").pickadate({
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
   }
 
   addEpisode(e) {
@@ -39,7 +42,7 @@ export default class AnimeDetails extends React.Component {
         <div className="col s12">
           <div className="animeDetails">
             <div className="animeDetails--title">
-              <h2><Link to={"/animes/" + this.props.anime.slug}>{this.props.anime.title}</Link></h2>
+              <h2>{this.props.anime.title}</h2>
             </div>
             <div className="row">
               <div className="col s4">
@@ -51,8 +54,8 @@ export default class AnimeDetails extends React.Component {
                 </div>
               </div>
             </div>
-            <div className="episodesList">
-              <div className="episodesList--title">
+            <div className="episodes">
+              <div className="episodes--title">
                 <h2>Episodes 0/{this.props.anime.episodes.length}</h2>
               </div>
               {episodes}
@@ -68,7 +71,7 @@ export default class AnimeDetails extends React.Component {
                       <label htmlFor="number">Number</label>
                     </div>
                     <div className="input-field col s12">
-                      <input ref="airDate" id="airDate" type="text" className="validate"/>
+                      <input ref="airDate" id="airDate" type="date" className="datepicker validate"/>
                       <label htmlFor="airDate">Airing Date</label>
                     </div>
                   </div>
