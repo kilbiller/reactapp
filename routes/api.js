@@ -250,7 +250,6 @@ router.post("/api/login", function(req, res) {
 // Logout
 router.get("/api/logout", function(req, res) {
   req.logout();
-  req.session.destroy();
   res.status(200).json({
     status: 200
   });

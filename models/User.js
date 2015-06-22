@@ -32,19 +32,19 @@ User.authenticate = function(username, password, done) {
     }
     if(!user) {
       return done(null, false, {
-        message: "Incorrect username."
+        message: "Incorrect username"
       });
     }
     if(!bcrypt.compareSync(password, user.password)) {
       return done(null, false, {
-        message: "Incorrect password."
+        message: "Incorrect password"
       });
     }
     return done(null, user);
   });
 };
 
-User.serializeUser = function(user, done) {
+/*User.serializeUser = function(user, done) {
   done(null, user.id);
 };
 
@@ -52,7 +52,7 @@ User.deserializeUser = function(id, done) {
   User.findById(id, function(err, user) {
     done(err, user);
   });
-};
+};*/
 
 User.createHash = function(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
