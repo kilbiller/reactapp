@@ -16,7 +16,6 @@ import {
   spawn
 }
 from "child_process";
-var node;
 
 var b = watchify(browserify({
   entries: "./client/main.js",
@@ -68,6 +67,7 @@ gulp.task("browser-sync", () => {
   });
 });
 
+var node;
 gulp.task("server", function() {
   if(node) {
     node.kill();
