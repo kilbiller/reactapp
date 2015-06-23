@@ -2,11 +2,11 @@ import Reflux from "reflux";
 import log from "loglevel";
 import Cookies from "js-cookie";
 
-import LoginActions from "../actions/LoginActions";
+import UserActions from "../actions/UserActions";
 
 export default Reflux.createStore({
   init: function() {
-    this.listenToMany(LoginActions);
+    this.listenToMany(UserActions);
     this.user = null;
   },
   onRegister: function() {
@@ -36,12 +36,9 @@ export default Reflux.createStore({
   onLogout: function() {
     log.info("Login out...");
   },
-  onLogoutCompleted: function(payload, router) {
+  onLogoutCompleted: function(router) {
     log.info("Logout successful.");
     Cookies.remove("token");
     router.transitionTo("/");
-  },
-  onLogoutFailed: function(payload) {
-    log.error("Error : " + payload.error);
   }
 });

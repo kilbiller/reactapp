@@ -1,10 +1,10 @@
 import React from "react";
 
 // Stores
-import LoginStore from "../stores/LoginStore";
+import UserStore from "../stores/UserStore";
 
 // Actions
-import LoginActions from "../actions/LoginActions";
+import UserActions from "../actions/UserActions";
 
 export default class Register extends React.Component {
   constructor(props) {
@@ -14,18 +14,18 @@ export default class Register extends React.Component {
     };
 
     // Bindings
-    this.onLoginUpdated = this.onLoginUpdated.bind(this);
+    this.onUserUpdated = this.onUserUpdated.bind(this);
     this.registerUser = this.registerUser.bind(this);
   }
 
-  onLoginUpdated(data) {
+  onUserUpdated(data) {
     this.setState({
       data: data
     });
   }
 
   componentDidMount() {
-    this.unsubscribe = LoginStore.listen(this.onLoginUpdated);
+    this.unsubscribe = UserStore.listen(this.onUserUpdated);
   }
 
   componentWillUnmount() {
@@ -38,7 +38,7 @@ export default class Register extends React.Component {
       username: React.findDOMNode(this.refs.username).value.trim(),
       password: React.findDOMNode(this.refs.password).value.trim()
     };
-    LoginActions.register(user, this.context.router);
+    UserActions.register(user, this.context.router);
   }
 
   render() {

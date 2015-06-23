@@ -38,14 +38,7 @@ Actions.login.listen(function(user, router) {
 });
 
 Actions.logout.listen(function(router) {
-  request.get("/api/logout")
-    .end(function(err, res) {
-      if(!err) {
-        Actions.logout.completed(res.body, router);
-      } else {
-        Actions.logout.failed(res.body);
-      }
-    });
+  Actions.logout.completed(router);
 });
 
 export default Actions;

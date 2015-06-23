@@ -1,9 +1,6 @@
 import gulp from "gulp";
 import browserify from "browserify";
-import browserSync, {
-  reload
-}
-from "browser-sync";
+import browserSync from "browser-sync";
 import del from "del";
 import babelify from "babelify";
 import sass from "gulp-sass";
@@ -70,12 +67,12 @@ gulp.task("css", () => {
       browsers: ["last 2 version"]
     })]))
     .pipe(gulp.dest(css.destDir))
-    .pipe(reload({
+    .pipe(browserSync.reload({
       stream: true
     }));
 });
 
-gulp.task("browser-sync", ["server"], () => {
+gulp.task("browser-sync", () => {
   browserSync.init({
     port: 3000,
     proxy: "http://localhost:8000"
@@ -101,8 +98,7 @@ gulp.task("clean", (cb) => {
   del(["build"], cb);
 });
 
-gulp.task("default", ["javascript", "css"], () => {
-  gulp.run("browser-sync");
-  gulp.watch(["client/**/*.js", "index.js", "server.js", "index.jade", "routes/**/*.js", "models/**/*.js"], ["server"]);
+gulp.task("default", ["javascript", "css", "server", "browser-sync"], () => {
+  gulp.watch(["index.js", "server.js", "index.jade", "routes/**/*.js", "models/**/*.js"], ["server", browserSync.reload]);
   gulp.watch("scss/*.scss", ["css"]);
 });

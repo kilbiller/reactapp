@@ -1,10 +1,10 @@
 import React from "react";
 
 // Stores
-import LoginStore from "../stores/LoginStore";
+import UserStore from "../stores/UserStore";
 
 // Actions
-import LoginActions from "../actions/LoginActions";
+import UserActions from "../actions/UserActions";
 
 export default class Logout extends React.Component {
   constructor(props) {
@@ -14,18 +14,18 @@ export default class Logout extends React.Component {
     };
 
     // Bindings
-    this.onLoginUpdated = this.onLoginUpdated.bind(this);
+    this.onUserUpdated = this.onUserUpdated.bind(this);
   }
 
-  onLoginUpdated(data) {
+  onUserUpdated(data) {
     this.setState({
       data: data
     });
   }
 
   componentDidMount() {
-    this.unsubscribe = LoginStore.listen(this.onLoginUpdated);
-    LoginActions.logout(this.context.router);
+    this.unsubscribe = UserStore.listen(this.onUserUpdated);
+    UserActions.logout(this.context.router);
   }
 
   componentWillUnmount() {

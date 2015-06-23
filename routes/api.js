@@ -35,15 +35,6 @@ var jwtSecret = "fdg54FDHA6dh4";
   }
 }*/
 
-/*function isLoggedIn(req, res, next) {
-  if(!req.isAuthenticated()) {
-    var error = new Error("Needs to be authenticated");
-    error.status = 401;
-    return next(error);
-  }
-  next();
-}*/
-
 // Anime
 router.get("/api/animes", function(req, res, next) {
   Anime.find(function(err, animes) {
@@ -248,14 +239,6 @@ router.post("/api/login", function(req, res) {
       user: req.user,
       token: token
     });
-  });
-});
-
-// Logout
-router.get("/api/logout", function(req, res) {
-  req.logout();
-  res.status(200).json({
-    status: 200
   });
 });
 

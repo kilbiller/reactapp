@@ -31,7 +31,7 @@ passport.use(new JwtStrategy({
       return done(err, false);
     }
     if(!user) {
-      done(null, false);
+      done(new Error("User account associated with token not found"), false);
     }
     done(null, user);
   });
