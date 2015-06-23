@@ -18,19 +18,8 @@ import {
 from "child_process";
 var node;
 
-var js = {
-  entryFile: "./client/main.js",
-  destDir: "./build/",
-  destFile: "app.js"
-};
-
-var css = {
-  entryFile: "scss/app.scss",
-  destDir: "./build"
-};
-
 var b = watchify(browserify({
-  entries: js.entryFile,
+  entries: "./client/main.js",
   debug: true,
   cache: {},
   packageCache: {}
@@ -40,15 +29,15 @@ b.transform(babelify);
 gulp.task("javascript", () => {
   function rebundle() {
     return b.bundle()
-      .pipe(source(js.destFile))
+      .pipe(source("app.js"))
       .pipe(buffer())
-      .pipe(sourcemaps.init({
+      /*.pipe(sourcemaps.init({
         loadMaps: true
       }))
       .pipe(uglify())
+      .pipe(sourcemaps.write("./"))*/
       .on("error", gutil.log)
-      .pipe(sourcemaps.write("./"))
-      .pipe(gulp.dest(js.destDir))
+      .pipe(gulp.dest("./build/"))
       .pipe(browserSync.reload({
         stream: true,
         once: true
@@ -61,12 +50,12 @@ gulp.task("javascript", () => {
 });
 
 gulp.task("css", () => {
-  gulp.src(css.entryFile)
+  gulp.src("scss/app.scss")
     .pipe(sass())
     .pipe(postcss([autoprefixer({
       browsers: ["last 2 version"]
     })]))
-    .pipe(gulp.dest(css.destDir))
+    .pipe(gulp.dest("./build"))
     .pipe(browserSync.reload({
       stream: true
     }));
