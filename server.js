@@ -31,7 +31,7 @@ passport.use(new JwtStrategy({
       return done(err, false);
     }
     if(!user) {
-      done(new Error("User account associated with token not found"), false);
+      done(null, false);
     }
     done(null, user);
   });
@@ -41,6 +41,7 @@ var app = express();
 
 app.set("views", "./");
 app.set("view engine", "jade");
+app.set("port", process.env.PORT || 8000);
 
 app.use(logger("dev"));
 app.use(express.static(__dirname));

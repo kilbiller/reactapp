@@ -32,10 +32,14 @@ User.authenticate = function(username, password, done) {
       return done(err);
     }
     if(!user) {
-      return done(new Error("Incorrect username"), false);
+      return done(null, false, {
+        message: "Incorrect username"
+      });
     }
     if(!bcrypt.compareSync(password, user.password)) {
-      return done(new Error("Incorrect password"), false);
+      return done(null, false, {
+        message: "Incorrect password"
+      });
     }
     return done(null, user);
   });
