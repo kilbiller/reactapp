@@ -17,9 +17,13 @@ import {
 }
 from "child_process";
 
+var config = {
+  production: false
+};
+
 var b = watchify(browserify({
   entries: "./client/main.js",
-  debug: true,
+  debug: !config.production,
   cache: {},
   packageCache: {}
 }));
@@ -27,20 +31,26 @@ b.transform(babelify);
 
 gulp.task("javascript", () => {
   function rebundle() {
-    return b.bundle()
+    var bundle = b.bundle()
       .pipe(source("app.js"))
-      .pipe(buffer())
-      /*.pipe(sourcemaps.init({
-        loadMaps: true
-      }))
-      .pipe(uglify())
-      .pipe(sourcemaps.write("./"))*/
+      .pipe(buffer());
+    if(config.production) {
+      bundle
+        .pipe(sourcemaps.init({
+          loadMaps: true
+        }))
+        .pipe(uglify())
+        .pipe(sourcemaps.write("./"));
+    }
+    bundle
       .on("error", gutil.log)
       .pipe(gulp.dest("./build/"))
       .pipe(browserSync.reload({
         stream: true,
         once: true
       }));
+
+    return bundle;
   }
 
   b.on("update", rebundle);
@@ -91,3 +101,9 @@ gulp.task("default", ["javascript", "css", "server", "browser-sync"], () => {
   gulp.watch(["index.js", "server.js", "index.jade", "routes/**/*.js", "models/**/*.js"], ["server", browserSync.reload]);
   gulp.watch("scss/*.scss", ["css"]);
 });
+
+gulp.task("production", function() {
+  config.production = true;
+});
+
+gulp.task("build", ["production", "javascript", "css"]);
