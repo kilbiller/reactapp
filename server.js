@@ -7,9 +7,6 @@ var React = require("react");
 var Router = require("react-router");
 var clientRoutes = require("./client/routes");
 var mongoose = require("mongoose");
-var passport = require("passport");
-var LocalStrategy = require("passport-local").Strategy;
-var JwtStrategy = require("passport-jwt").Strategy;
 
 // Models
 var User = require("./models/User");
@@ -18,24 +15,6 @@ var User = require("./models/User");
 mongoose.connect("mongodb://localhost/reactapp");
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
-
-// Passport config
-passport.use(new LocalStrategy(User.authenticate));
-passport.use(new JwtStrategy({
-  secretOrKey: "fdg54FDHA6dh4"
-}, function(jwtToken, done) {
-  User.findOne({
-    "_id": jwtToken.iss
-  }, function(err, user) {
-    if(err) {
-      return done(err, false);
-    }
-    if(!user) {
-      done(null, false);
-    }
-    done(null, user);
-  });
-}));
 
 var app = express();
 
@@ -46,7 +25,6 @@ app.set("port", process.env.PORT || 8000);
 app.use(logger("dev"));
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
-app.use(passport.initialize());
 
 // server routing
 app.use(require("./routes/api"));

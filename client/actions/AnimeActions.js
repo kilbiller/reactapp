@@ -70,7 +70,7 @@ Actions.addAnime.listen(function(anime, router) {
 
 Actions.deleteAnime.listen(function(slug, router) {
   request.del("/api/animes/" + slug)
-    .set("Authorization", "JWT " + Cookies.get("token"))
+    .set("Authorization", Cookies.get("token"))
     .end(function(err, res) {
       if(!err) {
         Actions.deleteAnime.completed(res.body, router);
@@ -105,7 +105,7 @@ Actions.deleteEpisode.listen(function(slug, episodeNumber) {
 
 Actions.addAnimeToList.listen(function(slug) {
   request.post("/api/users/animes")
-    .set("Authorization", "JWT " + Cookies.get("token"))
+    .set("Authorization", Cookies.get("token"))
     .send({
       slug: slug
     })
@@ -120,7 +120,7 @@ Actions.addAnimeToList.listen(function(slug) {
 
 Actions.removeAnimeFromList.listen(function(slug) {
   request.del("/api/users/animes/" + slug)
-    .set("Authorization", "JWT " + Cookies.get("token"))
+    .set("Authorization", Cookies.get("token"))
     .end(function(err, res) {
       if(!err) {
         Actions.removeAnimeFromList.completed(res.body);
@@ -132,7 +132,7 @@ Actions.removeAnimeFromList.listen(function(slug) {
 
 Actions.episodeSeen.listen(function(slug, episodeNumber) {
   request.post("/api/users/animes/" + slug + "/episodes")
-    .set("Authorization", "JWT " + Cookies.get("token"))
+    .set("Authorization", Cookies.get("token"))
     .send({
       episodeNumber: episodeNumber
     })
@@ -147,7 +147,7 @@ Actions.episodeSeen.listen(function(slug, episodeNumber) {
 
 Actions.removeEpisodeSeen.listen(function(slug, episodeNumber) {
   request.del("/api/users/animes/" + slug + "/episodes/" + episodeNumber)
-    .set("Authorization", "JWT " + Cookies.get("token"))
+    .set("Authorization", Cookies.get("token"))
     .end(function(err, res) {
       if(!err) {
         Actions.removeEpisodeSeen.completed(res.body);

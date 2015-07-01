@@ -1,5 +1,4 @@
 var express = require("express");
-var passport = require("passport");
 var jwt = require("jsonwebtoken");
 var _ = require("lodash");
 
@@ -10,9 +9,8 @@ var router = express.Router();
 
 var jwtSecret = "fdg54FDHA6dh4";
 
-/*function checkToken(req, res, next) {
-  var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers["Authorization"];
-  // TODO: Parse Authorization header for JWT jwtKey
+function checkToken(req, res, next) {
+  var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers["authorization"];
   if(token) {
     jwt.verify(token, jwtSecret, function(err, decoded) {
       if(err) {
@@ -25,16 +23,20 @@ var jwtSecret = "fdg54FDHA6dh4";
           return next(err);
         }
         if(!user) {
-          return next(new Error("User account associated with token not found"));
+          var error = new Error("User account associated with token not found");
+          error.status = 401;
+          return next(error);
         }
         req.user = user;
         next();
       });
     });
   } else {
-    return next(new Error("No token found, please authenticate"));
+    var error = new Error("No token found, please authenticate");
+    error.status = 401;
+    return next(error);
   }
-}*/
+}
 
 // Anime
 router.get("/api/animes", function(req, res, next) {
@@ -102,9 +104,7 @@ router.post("/api/animes", function(req, res, next) {
   });
 });
 
-router.delete("/api/animes/:slug", passport.authenticate("jwt", {
-  session: false
-}), function(req, res, next) {
+router.delete("/api/animes/:slug", checkToken, function(req, res, next) {
   Anime.findOne({
     slug: req.params.slug
   }, function(err, anime) {
@@ -208,44 +208,41 @@ router.post("/api/register", function(req, res, next) {
     if(err) {
       return next(err);
     }
-    passport.authenticate("local", {
-      session: false
-    })(req, res, function() {
-      var token = jwt.sign({}, jwtSecret, {
-        expiresInMinutes: 60 * 24 * 7,
-        issuer: user.id
-      });
 
-      res.status(201).json({
-        status: 201,
-        user: req.user,
-        token: token
-      });
-    });
-  });
-});
-
-// Login
-router.post("/api/login", function(req, res) {
-  passport.authenticate("local", {
-    session: false
-  })(req, res, function() {
     var token = jwt.sign({}, jwtSecret, {
       expiresInMinutes: 60 * 24 * 7,
-      issuer: req.user.id
+      issuer: user.id
     });
 
-    res.status(200).json({
-      status: 200,
-      user: req.user,
+    res.status(201).json({
+      status: 201,
+      user: user,
       token: token
     });
   });
 });
 
-router.post("/api/users/animes", passport.authenticate("jwt", {
-  session: false
-}), function(req, res, next) {
+// Login
+router.post("/api/login", function(req, res, next) {
+  User.isValidLogin(req.body.username, req.body.password, function(err, user) {
+    if(err) {
+      return next(err);
+    }
+
+    var token = jwt.sign({}, jwtSecret, {
+      expiresInMinutes: 60 * 24 * 7,
+      issuer: user.id
+    });
+
+    res.status(200).json({
+      status: 200,
+      user: user,
+      token: token
+    });
+  });
+});
+
+router.post("/api/users/animes", checkToken, function(req, res, next) {
   Anime.findOne({
     slug: req.body.slug
   }, function(err, anime) {
@@ -278,9 +275,7 @@ router.post("/api/users/animes", passport.authenticate("jwt", {
   });
 });
 
-router.delete("/api/users/animes/:slug", passport.authenticate("jwt", {
-  session: false
-}), function(req, res, next) {
+router.delete("/api/users/animes/:slug", checkToken, function(req, res, next) {
   Anime.findOne({
     slug: req.params.slug
   }, function(err, anime) {
@@ -315,9 +310,7 @@ router.delete("/api/users/animes/:slug", passport.authenticate("jwt", {
   });
 });
 
-router.post("/api/users/animes/:slug/episodes", passport.authenticate("jwt", {
-  session: false
-}), function(req, res, next) {
+router.post("/api/users/animes/:slug/episodes", checkToken, function(req, res, next) {
   Anime.findOne({
     slug: req.params.slug
   }, function(err, anime) {
@@ -340,7 +333,7 @@ router.post("/api/users/animes/:slug/episodes", passport.authenticate("jwt", {
         }
 
         var animeIndex = _.findIndex(user.animeList, {
-          "anime": anime._id
+          "anime": anime["_id"]
         });
 
         // check if the episode is already seen
@@ -362,9 +355,7 @@ router.post("/api/users/animes/:slug/episodes", passport.authenticate("jwt", {
   });
 });
 
-router.delete("/api/users/animes/:slug/episodes/:number", passport.authenticate("jwt", {
-  session: false
-}), function(req, res, next) {
+router.delete("/api/users/animes/:slug/episodes/:number", checkToken, function(req, res, next) {
   Anime.findOne({
     slug: req.params.slug
   }, function(err, anime) {
@@ -387,7 +378,7 @@ router.delete("/api/users/animes/:slug/episodes/:number", passport.authenticate(
         }
 
         var animeIndex = _.findIndex(user.animeList, {
-          "anime": anime._id
+          "anime": anime["_id"]
         });
         var episodeNumber = parseInt(req.params.number, 10);
 

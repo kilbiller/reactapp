@@ -24,24 +24,20 @@ var userSchema = new mongoose.Schema({
 
 var User = mongoose.model("User", userSchema);
 
-User.authenticate = function(username, password, done) {
+User.isValidLogin = function(username, password, cb) {
   User.findOne({
     username: username
   }, function(err, user) {
     if(err) {
-      return done(err);
+      return cb(err, null);
     }
     if(!user) {
-      return done(null, false, {
-        message: "Incorrect username"
-      });
+      return cb(new Error("Incorrect username"), null);
     }
     if(!bcrypt.compareSync(password, user.password)) {
-      return done(null, false, {
-        message: "Incorrect password"
-      });
+      return cb(new Error("Incorrect password"), null);
     }
-    return done(null, user);
+    return cb(null, user);
   });
 };
 
