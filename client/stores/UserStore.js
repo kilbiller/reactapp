@@ -8,6 +8,13 @@ export default Reflux.createStore({
   init: function() {
     this.listenToMany(UserActions);
     this.user = null;
+
+    this.isLoggedIn = function() {
+      if(Cookies.set("token")) {
+        return true;
+      }
+      return false;
+    };
   },
   onRegister: function() {
     log.info("Registering User...");

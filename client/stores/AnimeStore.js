@@ -97,5 +97,25 @@ export default Reflux.createStore({
   },
   onRemoveAnimeFromListFailed: function(payload) {
     log.error("Error : " + payload.error);
+  },
+  onEpisodeSeen: function() {
+    log.info("Marking an episode as seen...");
+  },
+  onEpisodeSeenCompleted: function(payload) {
+    log.info("Episode marked as seen.");
+    //this.trigger(payload.anime);
+  },
+  onEpisodeSeenFailed: function(payload) {
+    log.error("Error : " + payload.error);
+  },
+  onRemoveEpisodeSeen: function() {
+    log.info("Marking an episode as unseen...");
+  },
+  onRemoveEpisodeSeenCompleted: function(payload) {
+    log.info("Episode marked as unseen.");
+    //this.trigger(payload.anime);
+  },
+  onRemoveEpisodeSeenFailed: function(payload) {
+    log.error("Error : " + payload.error);
   }
 });

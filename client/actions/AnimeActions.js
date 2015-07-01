@@ -26,6 +26,12 @@ var Actions = Reflux.createActions({
   },
   "removeAnimeFromList": {
     children: ["completed", "failed"]
+  },
+  "episodeSeen": {
+    children: ["completed", "failed"]
+  },
+  "removeEpisodeSeen": {
+    children: ["completed", "failed"]
   }
 });
 
@@ -120,6 +126,33 @@ Actions.removeAnimeFromList.listen(function(slug) {
         Actions.removeAnimeFromList.completed(res.body);
       } else {
         Actions.removeAnimeFromList.failed(res.body);
+      }
+    });
+});
+
+Actions.episodeSeen.listen(function(slug, episodeNumber) {
+  request.post("/api/users/animes/" + slug + "/episodes")
+    .set("Authorization", "JWT " + Cookies.get("token"))
+    .send({
+      episodeNumber: episodeNumber
+    })
+    .end(function(err, res) {
+      if(!err) {
+        Actions.episodeSeen.completed(res.body);
+      } else {
+        Actions.episodeSeen.failed(res.body);
+      }
+    });
+});
+
+Actions.removeEpisodeSeen.listen(function(slug, episodeNumber) {
+  request.del("/api/users/animes/" + slug + "/episodes/" + episodeNumber)
+    .set("Authorization", "JWT " + Cookies.get("token"))
+    .end(function(err, res) {
+      if(!err) {
+        Actions.removeEpisodeSeen.completed(res.body);
+      } else {
+        Actions.removeEpisodeSeen.failed(res.body);
       }
     });
 });

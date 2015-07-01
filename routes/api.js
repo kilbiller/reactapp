@@ -1,6 +1,7 @@
 var express = require("express");
 var passport = require("passport");
 var jwt = require("jsonwebtoken");
+var _ = require("lodash");
 
 var Anime = require("../models/Anime");
 var User = require("../models/User");
@@ -286,6 +287,9 @@ router.delete("/api/users/animes/:slug", passport.authenticate("jwt", {
     if(err) {
       return next(err);
     }
+    if(!anime) {
+      return next(new Error("Anime was not found"));
+    }
     User.findOneAndUpdate({
         username: req.user.username
       }, {
@@ -308,6 +312,104 @@ router.delete("/api/users/animes/:slug", passport.authenticate("jwt", {
         });
       }
     );
+  });
+});
+
+router.post("/api/users/animes/:slug/episodes", passport.authenticate("jwt", {
+  session: false
+}), function(req, res, next) {
+  Anime.findOne({
+    slug: req.params.slug
+  }, function(err, anime) {
+    if(err) {
+      return next(err);
+    }
+    if(!anime) {
+      return next(new Error("Anime was not found"));
+    }
+    User.findOne({
+        username: req.user.username
+      })
+      .where("animeList.anime").equals(anime.id)
+      .exec(function(err, user) {
+        if(err) {
+          return next(err);
+        }
+        if(!user) {
+          return next(new Error("The anime you want to add an episode is not in your list"));
+        }
+
+        var animeIndex = _.findIndex(user.animeList, {
+          "anime": anime._id
+        });
+
+        // check if the episode is already seen
+        if(_.contains(user.animeList[animeIndex].episodes, req.body.episodeNumber)) {
+          return next(new Error("The episode is already seen"));
+        }
+
+        user.animeList[animeIndex].episodes.push(req.body.episodeNumber);
+
+        user.save(function(err, user) {
+          if(err) {
+            return next(err);
+          }
+          res.status(200).json({
+            status: 200
+          });
+        });
+      });
+  });
+});
+
+router.delete("/api/users/animes/:slug/episodes/:number", passport.authenticate("jwt", {
+  session: false
+}), function(req, res, next) {
+  Anime.findOne({
+    slug: req.params.slug
+  }, function(err, anime) {
+    if(err) {
+      return next(err);
+    }
+    if(!anime) {
+      return next(new Error("Anime was not found"));
+    }
+    User.findOne({
+        username: req.user.username
+      })
+      .where("animeList.anime").equals(anime.id)
+      .exec(function(err, user) {
+        if(err) {
+          return next(err);
+        }
+        if(!user) {
+          return next(new Error("The anime you want to remove an episode from is not in your list"));
+        }
+
+        var animeIndex = _.findIndex(user.animeList, {
+          "anime": anime._id
+        });
+        var episodeNumber = parseInt(req.params.number, 10);
+
+        // check if the episode is seen
+        if(!_.contains(user.animeList[animeIndex].episodes, episodeNumber)) {
+          return next(new Error("The episode is not in the list"));
+        }
+
+        _.pull(user.animeList[animeIndex].episodes, episodeNumber);
+
+        // need to notify mongoose of the deletion for Mixed Types (aka arrays)
+        user.markModified("animeList");
+
+        user.save(function(err, user) {
+          if(err) {
+            return next(err);
+          }
+          res.status(200).json({
+            status: 200
+          });
+        });
+      });
   });
 });
 
