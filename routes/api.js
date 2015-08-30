@@ -65,7 +65,7 @@ router.get("/api/animes/:slug", function(req, res, next) {
     });
 });
 
-router.post("/api/animes", function(req, res, next) {
+router.post("/api/animes", checkToken, function(req, res, next) {
   var anime = new Anime({
     title: req.body.title,
     year: req.body.year,

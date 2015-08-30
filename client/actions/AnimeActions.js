@@ -58,6 +58,7 @@ Actions.getAnime.listen(function(slug) {
 
 Actions.addAnime.listen(function(anime, router) {
   request.post("/api/animes")
+    .set("Authorization", Cookies.get("token"))
     .send(anime)
     .end(function(err, res) {
       if(!err) {
