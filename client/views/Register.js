@@ -35,10 +35,10 @@ export default class Register extends React.Component {
   registerUser(e) {
     e.preventDefault();
     var user = {
-      username: React.findDOMNode(this.refs.username).value.trim(),
-      password: React.findDOMNode(this.refs.password).value.trim()
+      username: this.refs.username.value.trim(),
+      password: this.refs.password.value.trim()
     };
-    UserActions.register(user, this.context.router);
+    UserActions.register(user);
   }
 
   render() {
@@ -61,7 +61,3 @@ export default class Register extends React.Component {
     );
   }
 }
-
-Register.contextTypes = {
-  router: React.PropTypes.func
-};

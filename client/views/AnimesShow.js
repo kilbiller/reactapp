@@ -41,7 +41,7 @@ export default class AnimesShow extends React.Component {
   }
 
   deleteAnime() {
-    AnimeActions.deleteAnime(this.state.anime.slug, this.context.router);
+    AnimeActions.deleteAnime(this.state.anime.slug);
   }
 
   editAnime() {
@@ -79,7 +79,3 @@ export default class AnimesShow extends React.Component {
     );
   }
 }
-
-AnimesShow.contextTypes = {
-  router: React.PropTypes.func
-};

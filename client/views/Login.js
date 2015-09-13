@@ -35,10 +35,10 @@ export default class Login extends React.Component {
   loginUser(e) {
     e.preventDefault();
     var user = {
-      username: React.findDOMNode(this.refs.username).value.trim(),
-      password: React.findDOMNode(this.refs.password).value.trim()
+      username: this.refs.username.value.trim(),
+      password: this.refs.password.value.trim()
     };
-    UserActions.login(user, this.context.router);
+    UserActions.login(user);
   }
 
   render() {
@@ -61,7 +61,3 @@ export default class Login extends React.Component {
     );
   }
 }
-
-Login.contextTypes = {
-  router: React.PropTypes.func
-};

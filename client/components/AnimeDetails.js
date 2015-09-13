@@ -24,9 +24,9 @@ export default class AnimeDetails extends React.Component {
   addEpisode(e) {
     e.preventDefault();
     var episode = {
-      title: React.findDOMNode(this.refs.title).value.trim(),
-      number: React.findDOMNode(this.refs.number).value.trim(),
-      airDate: React.findDOMNode(this.refs.airDate).value.trim()
+      title: this.refs.title.value.trim(),
+      number: this.refs.number.value.trim(),
+      airDate: this.refs.airDate.value.trim()
     };
     AnimeActions.addEpisode(this.props.anime.slug, episode);
   }

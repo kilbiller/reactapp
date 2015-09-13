@@ -34,11 +34,11 @@ export default class AnimesAdd extends React.Component {
   addAnime(e) {
     e.preventDefault();
     var anime = {
-      title: React.findDOMNode(this.refs.title).value.trim(),
-      year: React.findDOMNode(this.refs.year).value.trim(),
-      synopsis: React.findDOMNode(this.refs.synopsis).value.trim()
+      title: this.refs.title.value.trim(),
+      year: this.refs.year.value.trim(),
+      synopsis: this.refs.synopsis.value.trim()
     };
-    AnimeActions.addAnime(anime, this.context.router);
+    AnimeActions.addAnime(anime);
   }
 
   render() {
@@ -65,7 +65,3 @@ export default class AnimesAdd extends React.Component {
     );
   }
 }
-
-AnimesAdd.contextTypes = {
-  router: React.PropTypes.func
-};

@@ -5,7 +5,7 @@ import del from "del";
 import babelify from "babelify";
 import sass from "gulp-sass";
 import postcss from "gulp-postcss";
-import autoprefixer from "autoprefixer-core";
+import autoprefixer from "autoprefixer";
 import uglify from "gulp-uglify";
 import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";

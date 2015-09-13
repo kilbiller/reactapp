@@ -4,6 +4,8 @@ import find from "lodash/collection/find";
 
 import AnimeActions from "../actions/AnimeActions";
 
+import history from "../history";
+
 export default Reflux.createStore({
   init: function() {
     this.listenToMany(AnimeActions);
@@ -41,9 +43,9 @@ export default Reflux.createStore({
   onAddAnime: function() {
     log.info("Adding an anime...");
   },
-  onAddAnimeCompleted: function(payload, router) {
+  onAddAnimeCompleted: function(payload) {
     log.info("Anime Added.");
-    router.transitionTo("/animes/" + payload.slug);
+    history.replaceState(null, "/animes/" + payload.slug);
   },
   onAddAnimeFailed: function(payload) {
     log.error("Error : " + payload.error);
@@ -51,9 +53,9 @@ export default Reflux.createStore({
   onDeleteAnime: function() {
     log.info("Deleting an Anime...");
   },
-  onDeleteAnimeCompleted: function(payload, router) {
+  onDeleteAnimeCompleted: function(payload) {
     log.info("Anime Deleted.");
-    router.transitionTo("/");
+    history.replaceState(null, "/");
   },
   onDeleteAnimeFailed: function(payload) {
     log.error("Error : " + payload.error);

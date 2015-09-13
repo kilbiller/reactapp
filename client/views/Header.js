@@ -1,5 +1,8 @@
 import React from "react";
-import {Link} from "react-router";
+import {
+  Link
+}
+from "react-router";
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -7,10 +10,10 @@ export default class Header extends React.Component {
   }
 
   render() {
-    return (
+    return(
       <header>
         <div className="logo">
-          <h1><Link to="app">AnimeList</Link></h1>
+          <h1><Link to="/">AnimeList</Link></h1>
         </div>
       </header>
     );

@@ -25,7 +25,7 @@ export default class Logout extends React.Component {
 
   componentDidMount() {
     this.unsubscribe = UserStore.listen(this.onUserUpdated);
-    UserActions.logout(this.context.router);
+    UserActions.logout();
   }
 
   componentWillUnmount() {
@@ -39,7 +39,3 @@ export default class Logout extends React.Component {
     );
   }
 }
-
-Logout.contextTypes = {
-  router: React.PropTypes.func
-};
