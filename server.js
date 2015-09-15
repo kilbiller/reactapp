@@ -1,6 +1,7 @@
 var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
+var favicon = require('serve-favicon');
 var React = require("react");
 var createLocation = require("history/lib/createLocation");
 var ReactDOM = require("react-dom/server");
@@ -24,6 +25,7 @@ app.set("port", process.env.PORT || 8000);
 
 app.use(logger("dev"));
 app.use(express.static(__dirname));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(bodyParser.json());
 
 // server routing
@@ -41,12 +43,6 @@ app.use(function(err, req, res, next) {
 
 // Server side rendering to speed up load (then app.js in index.jade takes over as client side-rendering)
 app.use(function(req, res) {
-  // handle unwanted requests
-  if(req.url === "/favicon.ico") {
-    res.status(200).set("Content-Type", "image/x-icon").end();
-    return;
-  }
-
   var location = createLocation(req.url)
   Router.match({
     routes: clientRoutes,
