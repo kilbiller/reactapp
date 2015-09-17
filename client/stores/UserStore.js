@@ -4,8 +4,6 @@ import Cookies from "js-cookie";
 
 import UserActions from "../actions/UserActions";
 
-import history from "../history";
-
 export default Reflux.createStore({
   init: function() {
     this.listenToMany(UserActions);
@@ -21,7 +19,7 @@ export default Reflux.createStore({
   onRegister: function() {
     log.info("Registering User...");
   },
-  onRegisterCompleted: function(payload) {
+  onRegisterCompleted: function(payload, history) {
     log.info("Registration successful.");
     this.user = payload.user;
     Cookies.set("token", payload.token);
@@ -33,7 +31,7 @@ export default Reflux.createStore({
   onLogin: function() {
     log.info("Login User...");
   },
-  onLoginCompleted: function(payload) {
+  onLoginCompleted: function(payload, history) {
     log.info("Login successful.");
     this.user = payload.user;
     Cookies.set("token", payload.token);
@@ -45,7 +43,7 @@ export default Reflux.createStore({
   onLogout: function() {
     log.info("Login out...");
   },
-  onLogoutCompleted: function() {
+  onLogoutCompleted: function(history) {
     log.info("Logout successful.");
     Cookies.remove("token");
     history.replaceState(null, "/");

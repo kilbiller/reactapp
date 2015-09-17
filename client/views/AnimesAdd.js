@@ -38,7 +38,7 @@ export default class AnimesAdd extends React.Component {
       year: this.refs.year.value.trim(),
       synopsis: this.refs.synopsis.value.trim()
     };
-    AnimeActions.addAnime(anime);
+    AnimeActions.addAnime(anime, this.props.history);
   }
 
   render() {

@@ -56,25 +56,25 @@ Actions.getAnime.listen(function(slug) {
     });
 });
 
-Actions.addAnime.listen(function(anime) {
+Actions.addAnime.listen(function(anime, history) {
   request.post("/api/animes")
     .set("Authorization", Cookies.get("token"))
     .send(anime)
     .end(function(err, res) {
       if(!err) {
-        Actions.addAnime.completed(res.body);
+        Actions.addAnime.completed(res.body, history);
       } else {
         Actions.addAnime.failed(res.body);
       }
     });
 });
 
-Actions.deleteAnime.listen(function(slug) {
+Actions.deleteAnime.listen(function(slug, history) {
   request.del("/api/animes/" + slug)
     .set("Authorization", Cookies.get("token"))
     .end(function(err, res) {
       if(!err) {
-        Actions.deleteAnime.completed(res.body);
+        Actions.deleteAnime.completed(res.body, history);
       } else {
         Actions.deleteAnime.failed(res.body);
       }

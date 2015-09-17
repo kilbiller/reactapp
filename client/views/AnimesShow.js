@@ -41,7 +41,7 @@ export default class AnimesShow extends React.Component {
   }
 
   deleteAnime() {
-    AnimeActions.deleteAnime(this.state.anime.slug);
+    AnimeActions.deleteAnime(this.state.anime.slug, this.props.history);
   }
 
   editAnime() {

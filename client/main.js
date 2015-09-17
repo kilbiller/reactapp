@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import createBrowserHistory from "history/lib/createBrowserHistory";
 import Router from "react-router";
 import log from "loglevel";
 
 import routes from "./routes";
-import history from "./history";
 
 log.setLevel("debug");
 
-ReactDOM.render(<Router history={history}>{routes}</Router>, document.getElementById("react-main-mount"))
+ReactDOM.render(<Router history={createBrowserHistory()}>{routes}</Router>, document.getElementById("react-main-mount"))

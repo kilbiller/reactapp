@@ -38,7 +38,7 @@ export default class Register extends React.Component {
       username: this.refs.username.value.trim(),
       password: this.refs.password.value.trim()
     };
-    UserActions.register(user);
+    UserActions.register(user, this.props.history);
   }
 
   render() {

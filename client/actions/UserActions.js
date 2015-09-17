@@ -13,32 +13,32 @@ var Actions = Reflux.createActions({
   }
 });
 
-Actions.register.listen(function(user) {
+Actions.register.listen(function(user, history) {
   request.post("/api/register")
     .send(user)
     .end(function(err, res) {
       if(!err) {
-        Actions.register.completed(res.body);
+        Actions.register.completed(res.body, history);
       } else {
         Actions.register.failed(res.body);
       }
     });
 });
 
-Actions.login.listen(function(user) {
+Actions.login.listen(function(user, history) {
   request.post("/api/login")
     .send(user)
     .end(function(err, res) {
       if(!err) {
-        Actions.login.completed(res.body);
+        Actions.login.completed(res.body, history);
       } else {
         Actions.login.failed(res.body);
       }
     });
 });
 
-Actions.logout.listen(function() {
-  Actions.logout.completed();
+Actions.logout.listen(function(history) {
+  Actions.logout.completed(history);
 });
 
 export default Actions;

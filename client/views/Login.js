@@ -38,7 +38,7 @@ export default class Login extends React.Component {
       username: this.refs.username.value.trim(),
       password: this.refs.password.value.trim()
     };
-    UserActions.login(user);
+    UserActions.login(user, this.props.history);
   }
 
   render() {

@@ -25,7 +25,7 @@ export default class Logout extends React.Component {
 
   componentDidMount() {
     this.unsubscribe = UserStore.listen(this.onUserUpdated);
-    UserActions.logout();
+    UserActions.logout(this.props.history);
   }
 
   componentWillUnmount() {
