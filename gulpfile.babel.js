@@ -6,7 +6,6 @@ import babelify from "babelify";
 import sass from "gulp-sass";
 import postcss from "gulp-postcss";
 import autoprefixer from "autoprefixer";
-import uglify from "gulp-uglify";
 import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";
 import gutil from "gulp-util";
@@ -26,7 +25,6 @@ gulp.task("javascript", function() {
     var bundle = b.bundle()
       .pipe(source("app.js"))
       .pipe(buffer())
-      //.pipe(uglify())
       .on("error", gutil.log)
       .pipe(gulp.dest("./build/"))
       .pipe(browserSync.reload({
@@ -62,9 +60,8 @@ gulp.task("browser-sync", ["server"], function() {
 });
 
 gulp.task("server", ["build"], function(cb) {
-  nodemon({script: 'index.js',ext: '', env: {'NODE_ENV': 'development'}})
-  .on('start', function() {
-    console.log("dsf")
+  nodemon({script: "index.js", env: {"NODE_ENV": "development"}})
+  .on("start", function() {
     cb();
   });
 });

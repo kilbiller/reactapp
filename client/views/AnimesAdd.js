@@ -42,7 +42,7 @@ export default class AnimesAdd extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div className="row">
         <form className="col s12">
           <div className="row">

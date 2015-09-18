@@ -8,4 +8,4 @@ import routes from "./routes";
 
 log.setLevel("debug");
 
-ReactDOM.render(<Router history={createBrowserHistory()}>{routes}</Router>, document.getElementById("react-main-mount"))
+ReactDOM.render(<Router history={createBrowserHistory()}>{routes}</Router>, document.getElementById("react-main-mount"));

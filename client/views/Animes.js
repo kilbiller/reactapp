@@ -37,7 +37,7 @@ export default class Animes extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <ul>
           {this.state.animes.map(function(anime, index) {

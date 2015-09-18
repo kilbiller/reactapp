@@ -19,13 +19,19 @@ db.on("error", console.error.bind(console, "connection error:"));
 
 var app = express();
 
+if(db) {
+  mongoose.connect("mongodb://localhost/reactapp");
+} else {
+  mongoose.connect("mongodb://localhost/reactapp");
+}
+
 app.set("views", "./");
 app.set("view engine", "jade");
 app.set("port", process.env.PORT || 8000);
 
 app.use(logger("dev"));
 app.use(express.static(__dirname));
-app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + "/public/favicon.ico"));
 app.use(bodyParser.json());
 
 // server routing
@@ -43,24 +49,21 @@ app.use(function(err, req, res, next) {
 
 // Server side rendering to speed up load (then app.js in index.jade takes over as client side-rendering)
 app.use(function(req, res) {
-      var location = createLocation(req.url)
-      match({
-          routes: clientRoutes,
-          location: location
-        }, function(error, redirectLocation, renderProps) {
-          if(redirectLocation) {
-            res.redirect(301, redirectLocation.pathname + redirectLocation.search);
-          } else if(error) {
-            res.status(500).send(error.message);
-          } else if(renderProps === null) {
-            res.status(404).send('Not found');
-          } else {
-            var html = renderToString(<RoutingContext {...renderProps}/>);
-            res.render("index", {
-              html: html
-            });
-          }
-          });
+  var location = createLocation(req.url);
+  match({routes: clientRoutes, location: location}, function(error, redirectLocation, renderProps) {
+    if(redirectLocation) {
+      res.redirect(301, redirectLocation.pathname + redirectLocation.search);
+    } else if(error) {
+      res.status(500).send(error.message);
+    } else if(renderProps === null) {
+      res.status(404).send("Not found");
+    } else {
+      var html = renderToString(<RoutingContext {...renderProps}/>);
+      res.render("index", {
+        html: html
       });
+    }
+  });
+});
 
-    module.exports = app;
+module.exports = app;
