@@ -2,7 +2,7 @@ import Reflux from "reflux";
 import request from "superagent";
 import Cookies from "js-cookie";
 
-var Actions = Reflux.createActions({
+const Actions = Reflux.createActions({
   "getAnimes": {
     children: ["completed", "failed"]
   },

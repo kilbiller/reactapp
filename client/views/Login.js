@@ -18,12 +18,6 @@ export default class Login extends React.Component {
     this.loginUser = this.loginUser.bind(this);
   }
 
-  onUserUpdated(data) {
-    this.setState({
-      data: data
-    });
-  }
-
   componentDidMount() {
     this.unsubscribe = UserStore.listen(this.onUserUpdated);
   }
@@ -32,9 +26,15 @@ export default class Login extends React.Component {
     this.unsubscribe();
   }
 
+  onUserUpdated(data) {
+    this.setState({
+      data: data
+    });
+  }
+
   loginUser(e) {
     e.preventDefault();
-    var user = {
+    const user = {
       username: this.refs.username.value.trim(),
       password: this.refs.password.value.trim()
     };
@@ -42,7 +42,7 @@ export default class Login extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div className="row">
         <form className="col s12">
           <div className="row">

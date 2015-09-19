@@ -12,7 +12,7 @@ import gutil from "gulp-util";
 import watchify from "watchify";
 import nodemon from "gulp-nodemon";
 
-var b = watchify(browserify({
+const b = watchify(browserify({
   entries: "./client/main.js",
   debug: true,
   cache: {},
@@ -22,7 +22,7 @@ b.transform(babelify);
 
 gulp.task("javascript", function() {
   function rebundle() {
-    var bundle = b.bundle()
+    const bundle = b.bundle()
       .pipe(source("app.js"))
       .pipe(buffer())
       .on("error", gutil.log)
@@ -40,7 +40,7 @@ gulp.task("javascript", function() {
 });
 
 gulp.task("css", function() {
-  var stream = gulp.src("scss/app.scss")
+  const stream = gulp.src("scss/app.scss")
     .pipe(sass())
     .pipe(postcss([autoprefixer({
       browsers: ["last 2 version"]

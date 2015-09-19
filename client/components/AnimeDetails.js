@@ -23,7 +23,7 @@ export default class AnimeDetails extends React.Component {
 
   addEpisode(e) {
     e.preventDefault();
-    var episode = {
+    const episode = {
       title: this.refs.title.value.trim(),
       number: this.refs.number.value.trim(),
       airDate: this.refs.airDate.value.trim()
@@ -32,12 +32,12 @@ export default class AnimeDetails extends React.Component {
   }
 
   render() {
-    var self = this;
-    var episodes = this.props.anime.episodes.map(function(episode, index) {
+    const self = this;
+    const episodes = this.props.anime.episodes.map(function(episode, index) {
       return <Episode animeSlug={self.props.anime.slug} episode={episode} key={index}/>;
     });
 
-    return(
+    return (
       <div className="row">
         <div className="col s12">
           <div className="animeDetails">

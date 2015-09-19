@@ -1,16 +1,15 @@
-var express = require("express");
-var jwt = require("jsonwebtoken");
-var _ = require("lodash");
+import express from "express";
+import jwt from "jsonwebtoken";
+import _ from "lodash";
 
-var Anime = require("../models/Anime");
-var User = require("../models/User");
+import Anime from "../models/Anime";
+import User from "../models/User";
 
-var router = express.Router();
-
-var jwtSecret = "fdg54FDHA6dh4";
+const router = express.Router();
+const jwtSecret = "fdg54FDHA6dh4";
 
 function checkToken(req, res, next) {
-  var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers["authorization"];
+  const token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers["authorization"];
   if(token) {
     jwt.verify(token, jwtSecret, function(err, decoded) {
       if(err) {
@@ -23,7 +22,7 @@ function checkToken(req, res, next) {
           return next(err);
         }
         if(!user) {
-          var error = new Error("User account associated with token not found");
+          const error = new Error("User account associated with token not found");
           error.status = 401;
           return next(error);
         }
@@ -32,7 +31,7 @@ function checkToken(req, res, next) {
       });
     });
   } else {
-    var error = new Error("No token found, please authenticate");
+    const error = new Error("No token found, please authenticate");
     error.status = 401;
     return next(error);
   }
@@ -50,14 +49,14 @@ router.get("/api/animes", function(req, res, next) {
 
 router.get("/api/animes/:slug", function(req, res, next) {
   Anime.findOne({
-      slug: req.params.slug
-    },
+    slug: req.params.slug
+  },
     function(err, anime) {
       if(err) {
         return next(err);
       }
       if(!anime) {
-        var error = new Error("Anime does not exists.");
+        const error = new Error("Anime does not exists.");
         error.status = 404;
         return next(error);
       }
@@ -66,7 +65,7 @@ router.get("/api/animes/:slug", function(req, res, next) {
 });
 
 router.post("/api/animes", checkToken, function(req, res, next) {
-  var anime = new Anime({
+  const anime = new Anime({
     title: req.body.title,
     year: req.body.year,
     image: "http://cdn.myanimelist.net/images/anime/8/33713l.jpg",
@@ -112,94 +111,93 @@ router.delete("/api/animes/:slug", checkToken, function(req, res, next) {
       return next(err);
     }
     User.update({
-        "animeList.anime": anime.id
-      }, {
-        $pull: {
-          "animeList": {
-            anime: anime.id
-          }
+      "animeList.anime": anime.id
+    }, {
+      $pull: {
+        "animeList": {
+          anime: anime.id
         }
-      }, {
-        multi: true
-      },
-      function(err, users) {
+      }
+    }, {
+      multi: true
+    },
+    function(err, users) {
+      if(err) {
+        return next(err);
+      }
+      anime.remove(function(err, anime) {
         if(err) {
           return next(err);
         }
-        anime.remove(function(err, anime) {
-          if(err) {
-            return next(err);
-          }
-          res.status(200).json({
-            status: 200
-          });
+        res.status(200).json({
+          status: 200
         });
       });
+    });
   });
 });
 
 // Episodes
 router.post("/api/animes/:slug/episodes", function(req, res, next) {
   Anime.findOne({
-      slug: req.params.slug,
-      "episodes.number": {
-        $ne: req.body.number
-      }
-    },
-    function(err, anime) {
+    slug: req.params.slug,
+    "episodes.number": {
+      $ne: req.body.number
+    }
+  },
+  function(err, anime) {
+    if(err) {
+      return next(err);
+    }
+    if(!anime) {
+      return next(new Error("An episode with the same number already exists"));
+    }
+    anime.episodes.push({
+      number: req.body.number,
+      title: req.body.title,
+      airDate: new Date(req.body.airDate)
+    });
+
+    anime.save(function(err, anime) {
       if(err) {
         return next(err);
       }
-      if(!anime) {
-        return next(new Error("An episode with the same number already exists"));
-      }
-      anime.episodes.push({
-        number: req.body.number,
-        title: req.body.title,
-        airDate: new Date(req.body.airDate)
-      });
-
-      anime.save(function(err, anime) {
-        if(err) {
-          return next(err);
-        }
-        res.status(201).json({
-          status: 201,
-          anime: anime
-        });
+      res.status(201).json({
+        status: 201,
+        anime: anime
       });
     });
+  });
 });
 
 router.delete("/api/animes/:slug/episodes/:number", function(req, res, next) {
   Anime.findOneAndUpdate({
-      slug: req.params.slug
-    }, {
-      $pull: {
-        "episodes": {
-          number: req.params.number
-        }
+    slug: req.params.slug
+  }, {
+    $pull: {
+      "episodes": {
+        number: req.params.number
       }
-    }, {
-      safe: true,
-      upsert: true,
-      new: true
-    },
-    function(err, anime) {
-      if(err) {
-        return next(err);
-      }
-      res.status(200).json({
-        status: 200,
-        anime: anime
-      });
     }
-  );
+  }, {
+    safe: true,
+    upsert: true,
+    new: true
+  },
+  function(err, anime) {
+    if(err) {
+      return next(err);
+    }
+    res.status(200).json({
+      status: 200,
+      anime: anime
+    });
+  });
 });
 
 // Register
 router.post("/api/register", function(req, res, next) {
-  var user = new User({
+  const user = new User({
     username: req.body.username,
     password: User.createHash(req.body.password)
   });
@@ -209,7 +207,7 @@ router.post("/api/register", function(req, res, next) {
       return next(err);
     }
 
-    var token = jwt.sign({}, jwtSecret, {
+    const token = jwt.sign({}, jwtSecret, {
       expiresInMinutes: 60 * 24 * 7,
       issuer: user.id
     });
@@ -229,7 +227,7 @@ router.post("/api/login", function(req, res, next) {
       return next(err);
     }
 
-    var token = jwt.sign({}, jwtSecret, {
+    const token = jwt.sign({}, jwtSecret, {
       expiresInMinutes: 60 * 24 * 7,
       issuer: user.id
     });
@@ -250,28 +248,28 @@ router.post("/api/users/animes", checkToken, function(req, res, next) {
       return next(err);
     }
     User.findOne({
-        username: req.user.username
-      })
-      .where("animeList.anime").ne(anime.id)
-      .exec(function(err, user) {
+      username: req.user.username
+    })
+    .where("animeList.anime").ne(anime.id)
+    .exec(function(err, user) {
+      if(err) {
+        return next(err);
+      }
+      if(!user) {
+        return next(new Error("Anime already in list"));
+      }
+      user.animeList.push({
+        anime: anime.id
+      });
+      user.save(function(err, user) {
         if(err) {
           return next(err);
         }
-        if(!user) {
-          return next(new Error("Anime already in list"));
-        }
-        user.animeList.push({
-          anime: anime.id
-        });
-        user.save(function(err, user) {
-          if(err) {
-            return next(err);
-          }
-          res.status(200).json({
-            status: 200
-          });
+        res.status(200).json({
+          status: 200
         });
       });
+    });
   });
 });
 
@@ -286,27 +284,26 @@ router.delete("/api/users/animes/:slug", checkToken, function(req, res, next) {
       return next(new Error("Anime was not found"));
     }
     User.findOneAndUpdate({
-        username: req.user.username
-      }, {
-        $pull: {
-          "animeList": {
-            anime: anime.id
-          }
+      username: req.user.username
+    }, {
+      $pull: {
+        "animeList": {
+          anime: anime.id
         }
-      }, {
-        safe: true,
-        upsert: true,
-        new: true
-      },
-      function(err, user) {
-        if(err) {
-          return next(err);
-        }
-        res.status(200).json({
-          status: 200
-        });
       }
-    );
+    }, {
+      safe: true,
+      upsert: true,
+      new: true
+    },
+    function(err, user) {
+      if(err) {
+        return next(err);
+      }
+      res.status(200).json({
+        status: 200
+      });
+    });
   });
 });
 
@@ -321,37 +318,37 @@ router.post("/api/users/animes/:slug/episodes", checkToken, function(req, res, n
       return next(new Error("Anime was not found"));
     }
     User.findOne({
-        username: req.user.username
-      })
-      .where("animeList.anime").equals(anime.id)
-      .exec(function(err, user) {
+      username: req.user.username
+    })
+    .where("animeList.anime").equals(anime.id)
+    .exec(function(err, user) {
+      if(err) {
+        return next(err);
+      }
+      if(!user) {
+        return next(new Error("The anime you want to add an episode is not in your list"));
+      }
+
+      const animeIndex = _.findIndex(user.animeList, {
+        "anime": anime["_id"]
+      });
+
+      // check if the episode is already seen
+      if(_.contains(user.animeList[animeIndex].episodes, req.body.episodeNumber)) {
+        return next(new Error("The episode is already seen"));
+      }
+
+      user.animeList[animeIndex].episodes.push(req.body.episodeNumber);
+
+      user.save(function(err, user) {
         if(err) {
           return next(err);
         }
-        if(!user) {
-          return next(new Error("The anime you want to add an episode is not in your list"));
-        }
-
-        var animeIndex = _.findIndex(user.animeList, {
-          "anime": anime["_id"]
-        });
-
-        // check if the episode is already seen
-        if(_.contains(user.animeList[animeIndex].episodes, req.body.episodeNumber)) {
-          return next(new Error("The episode is already seen"));
-        }
-
-        user.animeList[animeIndex].episodes.push(req.body.episodeNumber);
-
-        user.save(function(err, user) {
-          if(err) {
-            return next(err);
-          }
-          res.status(200).json({
-            status: 200
-          });
+        res.status(200).json({
+          status: 200
         });
       });
+    });
   });
 });
 
@@ -366,41 +363,41 @@ router.delete("/api/users/animes/:slug/episodes/:number", checkToken, function(r
       return next(new Error("Anime was not found"));
     }
     User.findOne({
-        username: req.user.username
-      })
-      .where("animeList.anime").equals(anime.id)
-      .exec(function(err, user) {
+      username: req.user.username
+    })
+    .where("animeList.anime").equals(anime.id)
+    .exec(function(err, user) {
+      if(err) {
+        return next(err);
+      }
+      if(!user) {
+        return next(new Error("The anime you want to remove an episode from is not in your list"));
+      }
+
+      const animeIndex = _.findIndex(user.animeList, {
+        "anime": anime["_id"]
+      });
+      const episodeNumber = parseInt(req.params.number, 10);
+
+      // check if the episode is seen
+      if(!_.contains(user.animeList[animeIndex].episodes, episodeNumber)) {
+        return next(new Error("The episode is not in the list"));
+      }
+
+      _.pull(user.animeList[animeIndex].episodes, episodeNumber);
+
+      // need to notify mongoose of the deletion for Mixed Types (aka arrays)
+      user.markModified("animeList");
+
+      user.save(function(err, user) {
         if(err) {
           return next(err);
         }
-        if(!user) {
-          return next(new Error("The anime you want to remove an episode from is not in your list"));
-        }
-
-        var animeIndex = _.findIndex(user.animeList, {
-          "anime": anime["_id"]
-        });
-        var episodeNumber = parseInt(req.params.number, 10);
-
-        // check if the episode is seen
-        if(!_.contains(user.animeList[animeIndex].episodes, episodeNumber)) {
-          return next(new Error("The episode is not in the list"));
-        }
-
-        _.pull(user.animeList[animeIndex].episodes, episodeNumber);
-
-        // need to notify mongoose of the deletion for Mixed Types (aka arrays)
-        user.markModified("animeList");
-
-        user.save(function(err, user) {
-          if(err) {
-            return next(err);
-          }
-          res.status(200).json({
-            status: 200
-          });
+        res.status(200).json({
+          status: 200
         });
       });
+    });
   });
 });
 

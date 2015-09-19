@@ -1,7 +1,7 @@
 import Reflux from "reflux";
 import request from "superagent";
 
-var Actions = Reflux.createActions({
+const Actions = Reflux.createActions({
   "register": {
     children: ["completed", "failed"]
   },

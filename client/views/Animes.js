@@ -21,12 +21,6 @@ export default class Animes extends React.Component {
     this.onAnimeUpdated = this.onAnimeUpdated.bind(this);
   }
 
-  onAnimeUpdated(animes) {
-    this.setState({
-      animes: animes
-    });
-  }
-
   componentDidMount() {
     this.unsubscribe = AnimeStore.listen(this.onAnimeUpdated);
     AnimeActions.getAnimes();
@@ -34,6 +28,12 @@ export default class Animes extends React.Component {
 
   componentWillUnmount() {
     this.unsubscribe();
+  }
+
+  onAnimeUpdated(animes) {
+    this.setState({
+      animes: animes
+    });
   }
 
   render() {

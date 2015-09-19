@@ -17,11 +17,6 @@ export default class AnimesAdd extends React.Component {
     this.addAnime = this.addAnime.bind(this);
   }
 
-  onAnimeUpdated(data) {
-    this.setState({
-      data: data
-    });
-  }
 
   componentDidMount() {
     this.unsubscribe = AnimeStore.listen(this.onAnimeUpdated);
@@ -31,9 +26,15 @@ export default class AnimesAdd extends React.Component {
     this.unsubscribe();
   }
 
+  onAnimeUpdated(data) {
+    this.setState({
+      data: data
+    });
+  }
+
   addAnime(e) {
     e.preventDefault();
-    var anime = {
+    const anime = {
       title: this.refs.title.value.trim(),
       year: this.refs.year.value.trim(),
       synopsis: this.refs.synopsis.value.trim()

@@ -1,8 +1,4 @@
 import React from "react";
-import {
-  Link
-}
-from "react-router";
 
 export default class Calendar extends React.Component {
   constructor(props) {
@@ -10,7 +6,7 @@ export default class Calendar extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         Hello
       </div>

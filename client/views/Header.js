@@ -10,7 +10,7 @@ export default class Header extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <header>
         <div className="logo">
           <h1><Link to="/">AnimeList</Link></h1>

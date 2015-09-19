@@ -25,12 +25,6 @@ export default class AnimesShow extends React.Component {
     this.removeFromList = this.removeFromList.bind(this);
   }
 
-  onAnimeUpdated(anime) {
-    this.setState({
-      anime: anime
-    });
-  }
-
   componentDidMount() {
     this.unsubscribe = AnimeStore.listen(this.onAnimeUpdated);
     AnimeActions.getAnime(this.props.params.slug);
@@ -38,6 +32,12 @@ export default class AnimesShow extends React.Component {
 
   componentWillUnmount() {
     this.unsubscribe();
+  }
+
+  onAnimeUpdated(anime) {
+    this.setState({
+      anime: anime
+    });
   }
 
   deleteAnime() {
@@ -57,7 +57,7 @@ export default class AnimesShow extends React.Component {
   }
 
   render() {
-    var anime;
+    let anime;
     if(this.state.anime) {
       anime = (
         <div>
@@ -72,7 +72,7 @@ export default class AnimesShow extends React.Component {
         </div>
       );
     }
-    return(
+    return (
       <div>
         {anime}
       </div>

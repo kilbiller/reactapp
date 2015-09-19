@@ -11,7 +11,7 @@ export default Reflux.createStore({
     this.anime = null;
 
     this.getAnimeBySlug = function(slug) {
-      var anime = find(this.animes, {
+      const anime = find(this.animes, {
         slug: slug
       });
       return anime;
@@ -83,7 +83,7 @@ export default Reflux.createStore({
   },
   onAddAnimeToListCompleted: function(payload) {
     log.info("Anime added to list.");
-    //this.trigger(payload.anime);
+    // this.trigger(payload.anime);
   },
   onAddAnimeToListFailed: function(payload) {
     log.error("Error : " + payload.error);
@@ -93,7 +93,7 @@ export default Reflux.createStore({
   },
   onRemoveAnimeFromListCompleted: function(payload) {
     log.info("Anime removed from list.");
-    //this.trigger(payload.anime);
+    // this.trigger(payload.anime);
   },
   onRemoveAnimeFromListFailed: function(payload) {
     log.error("Error : " + payload.error);
@@ -103,7 +103,7 @@ export default Reflux.createStore({
   },
   onEpisodeSeenCompleted: function(payload) {
     log.info("Episode marked as seen.");
-    //this.trigger(payload.anime);
+    // this.trigger(payload.anime);
   },
   onEpisodeSeenFailed: function(payload) {
     log.error("Error : " + payload.error);
@@ -113,7 +113,7 @@ export default Reflux.createStore({
   },
   onRemoveEpisodeSeenCompleted: function(payload) {
     log.info("Episode marked as unseen.");
-    //this.trigger(payload.anime);
+    // this.trigger(payload.anime);
   },
   onRemoveEpisodeSeenFailed: function(payload) {
     log.error("Error : " + payload.error);

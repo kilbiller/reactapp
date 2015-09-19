@@ -9,7 +9,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <Header/>
         <div className="container">
@@ -19,3 +19,7 @@ export default class App extends React.Component {
     );
   }
 }
+
+App.propTypes = {
+  children: React.PropTypes.object
+};

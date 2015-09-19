@@ -17,12 +17,6 @@ export default class Logout extends React.Component {
     this.onUserUpdated = this.onUserUpdated.bind(this);
   }
 
-  onUserUpdated(data) {
-    this.setState({
-      data: data
-    });
-  }
-
   componentDidMount() {
     this.unsubscribe = UserStore.listen(this.onUserUpdated);
     UserActions.logout(this.props.history);
@@ -32,8 +26,14 @@ export default class Logout extends React.Component {
     this.unsubscribe();
   }
 
+  onUserUpdated(data) {
+    this.setState({
+      data: data
+    });
+  }
+
   render() {
-    return(
+    return (
       <div>
       </div>
     );
