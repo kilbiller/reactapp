@@ -10,7 +10,7 @@ export default class Home extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <ul>
           <li><Link to="/animes">Get All Anime</Link></li>

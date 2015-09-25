@@ -18,12 +18,6 @@ export default class Login extends React.Component {
     this.loginUser = this.loginUser.bind(this);
   }
 
-  onUserUpdated(data) {
-    this.setState({
-      data: data
-    });
-  }
-
   componentDidMount() {
     this.unsubscribe = UserStore.listen(this.onUserUpdated);
   }
@@ -32,17 +26,23 @@ export default class Login extends React.Component {
     this.unsubscribe();
   }
 
+  onUserUpdated(data) {
+    this.setState({
+      data: data
+    });
+  }
+
   loginUser(e) {
     e.preventDefault();
-    var user = {
-      username: React.findDOMNode(this.refs.username).value.trim(),
-      password: React.findDOMNode(this.refs.password).value.trim()
+    const user = {
+      username: this.refs.username.value.trim(),
+      password: this.refs.password.value.trim()
     };
-    UserActions.login(user, this.context.router);
+    UserActions.login(user, this.props.history);
   }
 
   render() {
-    return(
+    return (
       <div className="row">
         <form className="col s12">
           <div className="row">
@@ -61,7 +61,3 @@ export default class Login extends React.Component {
     );
   }
 }
-
-Login.contextTypes = {
-  router: React.PropTypes.func
-};

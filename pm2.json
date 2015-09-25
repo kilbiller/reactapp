@@ -1,0 +1,8 @@
+﻿{
+  "name": "reactapp",
+  "script": "index.js",
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": 8002
+  }
+}

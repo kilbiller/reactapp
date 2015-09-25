@@ -1,5 +1,5 @@
 import React from "react";
-import moment from "moment";
+// import moment from "moment";
 
 import AnimeActions from "../actions/AnimeActions";
 
@@ -26,11 +26,11 @@ export default class Episode extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div className="episode">
           <div className="episode--number"><span>{this.props.episode.number}</span></div>
-          <div className="episode--title">{this.props.episode.title} {/*moment(this.props.episode.airDate).format("MMM Do YYYY")*/}</div>
+          <div className="episode--title">{this.props.episode.title} {/* moment(this.props.episode.airDate).format("MMM Do YYYY")*/}</div>
           <button className="btn waves-effect waves-light" onClick={this.deleteEpisode}>Delete</button>
           <button className="btn waves-effect waves-light" onClick={this.episodeSeen}>Seen</button>
           <button className="btn waves-effect waves-light" onClick={this.removeEpisodeSeen}>Un-See</button>
@@ -39,3 +39,8 @@ export default class Episode extends React.Component {
     );
   }
 }
+
+Episode.propTypes = {
+  animeSlug: React.PropTypes.number.isRequired,
+  episode: React.PropTypes.object.isRequired
+};

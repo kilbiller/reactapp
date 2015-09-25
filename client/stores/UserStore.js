@@ -19,11 +19,11 @@ export default Reflux.createStore({
   onRegister: function() {
     log.info("Registering User...");
   },
-  onRegisterCompleted: function(payload, router) {
+  onRegisterCompleted: function(payload, history) {
     log.info("Registration successful.");
     this.user = payload.user;
     Cookies.set("token", payload.token);
-    router.transitionTo("/");
+    history.replaceState(null, "/");
   },
   onRegisterFailed: function(payload) {
     log.error("Error : " + payload.error);
@@ -31,11 +31,11 @@ export default Reflux.createStore({
   onLogin: function() {
     log.info("Login User...");
   },
-  onLoginCompleted: function(payload, router) {
+  onLoginCompleted: function(payload, history) {
     log.info("Login successful.");
     this.user = payload.user;
     Cookies.set("token", payload.token);
-    router.transitionTo("/");
+    history.replaceState(null, "/");
   },
   onLoginFailed: function(payload) {
     log.error("Error : " + payload.error);
@@ -43,9 +43,9 @@ export default Reflux.createStore({
   onLogout: function() {
     log.info("Login out...");
   },
-  onLogoutCompleted: function(router) {
+  onLogoutCompleted: function(history) {
     log.info("Logout successful.");
     Cookies.remove("token");
-    router.transitionTo("/");
+    history.replaceState(null, "/");
   }
 });

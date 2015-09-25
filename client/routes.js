@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Route, DefaultRoute
+  Route, IndexRoute
 }
 from "react-router";
 
@@ -15,15 +15,15 @@ import Logout from "./views/Logout";
 import Calendar from "./views/Calendar";
 
 var routes = (
-  <Route name="app" path="/" handler={App}>
-    <DefaultRoute handler={Home}/>
-    <Route path="/animes" handler={Animes}/>
-    <Route path="/animes/:slug" handler={AnimesShow}/>
-    <Route path="/addanime" handler={AnimesAdd}/>
-    <Route path="/register" handler={Register}/>
-    <Route path="/login" handler={Login}/>
-    <Route path="/logout" handler={Logout}/>
-    <Route path="/calendar" handler={Calendar}/>
+  <Route path="/" component={App}>
+    <IndexRoute component={Home}/>
+    <Route path="animes" component={Animes}/>
+    <Route path="animes/:slug" component={AnimesShow}/>
+    <Route path="addanime" component={AnimesAdd}/>
+    <Route path="register" component={Register}/>
+    <Route path="login" component={Login}/>
+    <Route path="logout" component={Logout}/>
+    <Route path="calendar" component={Calendar}/>
   </Route>
 );
 

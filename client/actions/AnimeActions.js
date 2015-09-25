@@ -2,7 +2,7 @@ import Reflux from "reflux";
 import request from "superagent";
 import Cookies from "js-cookie";
 
-var Actions = Reflux.createActions({
+const Actions = Reflux.createActions({
   "getAnimes": {
     children: ["completed", "failed"]
   },
@@ -56,24 +56,25 @@ Actions.getAnime.listen(function(slug) {
     });
 });
 
-Actions.addAnime.listen(function(anime, router) {
+Actions.addAnime.listen(function(anime, history) {
   request.post("/api/animes")
+    .set("Authorization", Cookies.get("token"))
     .send(anime)
     .end(function(err, res) {
       if(!err) {
-        Actions.addAnime.completed(res.body, router);
+        Actions.addAnime.completed(res.body, history);
       } else {
         Actions.addAnime.failed(res.body);
       }
     });
 });
 
-Actions.deleteAnime.listen(function(slug, router) {
+Actions.deleteAnime.listen(function(slug, history) {
   request.del("/api/animes/" + slug)
     .set("Authorization", Cookies.get("token"))
     .end(function(err, res) {
       if(!err) {
-        Actions.deleteAnime.completed(res.body, router);
+        Actions.deleteAnime.completed(res.body, history);
       } else {
         Actions.deleteAnime.failed(res.body);
       }

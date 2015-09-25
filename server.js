@@ -1,22 +1,26 @@
-require("babel/register");
-
-var express = require("express");
-var logger = require("morgan");
-var bodyParser = require("body-parser");
-var React = require("react");
-var Router = require("react-router");
-var clientRoutes = require("./client/routes");
-var mongoose = require("mongoose");
-
-// Models
-var User = require("./models/User");
+import express from "express";
+import logger from "morgan";
+import bodyParser from "body-parser";
+import favicon from "serve-favicon";
+import React from "react";
+import createLocation from "history/lib/createLocation";
+import {renderToString} from "react-dom/server";
+import {RoutingContext, match} from "react-router";
+import clientRoutes from "./client/routes";
+import mongoose from "mongoose";
 
 // MongoDB connection
 mongoose.connect("mongodb://localhost/reactapp");
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 
-var app = express();
+const app = express();
+
+if(db) {
+  mongoose.connect("mongodb://localhost/reactapp");
+} else {
+  mongoose.connect("mongodb://localhost/reactapp");
+}
 
 app.set("views", "./");
 app.set("view engine", "jade");
@@ -24,6 +28,7 @@ app.set("port", process.env.PORT || 8000);
 
 app.use(logger("dev"));
 app.use(express.static(__dirname));
+app.use(favicon(__dirname + "/public/favicon.ico"));
 app.use(bodyParser.json());
 
 // server routing
@@ -33,30 +38,28 @@ app.use(require("./routes/api"));
 app.use(function(err, req, res, next) {
   res.status(err.status || 400);
   console.error("Error " + res.statusCode + ": " + err.message);
-  return res.json({
+  next(res.json({
     status: res.statusCode,
     error: err.message
-  });
+  }));
 });
 
 // Server side rendering to speed up load (then app.js in index.jade takes over as client side-rendering)
 app.use(function(req, res) {
-  // handle unwanted requests
-  if(req.url === "/favicon.ico") {
-    res.status(200).set("Content-Type", "image/x-icon").end();
-    return;
-  }
-
-  var router = Router.create({
-    location: req.url,
-    routes: clientRoutes
-  });
-  router.run(function(Root) {
-    var elem = React.createElement(Root);
-    var html = React.renderToString(elem);
-    res.render("index", {
-      html: html
-    });
+  const location = createLocation(req.url);
+  match({routes: clientRoutes, location: location}, function(error, redirectLocation, renderProps) {
+    if(redirectLocation) {
+      res.redirect(301, redirectLocation.pathname + redirectLocation.search);
+    } else if(error) {
+      res.status(500).send(error.message);
+    } else if(renderProps === null) {
+      res.status(404).send("Not found");
+    } else {
+      const html = renderToString(<RoutingContext {...renderProps}/>);
+      res.render("index", {
+        html: html
+      });
+    }
   });
 });
 

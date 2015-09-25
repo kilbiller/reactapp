@@ -5,44 +5,26 @@ import del from "del";
 import babelify from "babelify";
 import sass from "gulp-sass";
 import postcss from "gulp-postcss";
-import autoprefixer from "autoprefixer-core";
-import uglify from "gulp-uglify";
+import autoprefixer from "autoprefixer";
 import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";
 import gutil from "gulp-util";
-import sourcemaps from "gulp-sourcemaps";
 import watchify from "watchify";
-import {
-  spawn
-}
-from "child_process";
+import nodemon from "gulp-nodemon";
 
-var config = {
-  production: false
-};
-
-var b = watchify(browserify({
+const b = watchify(browserify({
   entries: "./client/main.js",
-  debug: !config.production,
+  debug: true,
   cache: {},
   packageCache: {}
 }));
 b.transform(babelify);
 
-gulp.task("javascript", () => {
+gulp.task("javascript", function() {
   function rebundle() {
-    var bundle = b.bundle()
+    const bundle = b.bundle()
       .pipe(source("app.js"))
-      .pipe(buffer());
-    if(config.production) {
-      bundle
-        .pipe(sourcemaps.init({
-          loadMaps: true
-        }))
-        .pipe(uglify())
-        .pipe(sourcemaps.write("./"));
-    }
-    bundle
+      .pipe(buffer())
       .on("error", gutil.log)
       .pipe(gulp.dest("./build/"))
       .pipe(browserSync.reload({
@@ -54,12 +36,11 @@ gulp.task("javascript", () => {
   }
 
   b.on("update", rebundle);
-
   return rebundle();
 });
 
-gulp.task("css", () => {
-  gulp.src("scss/app.scss")
+gulp.task("css", function() {
+  const stream = gulp.src("scss/app.scss")
     .pipe(sass())
     .pipe(postcss([autoprefixer({
       browsers: ["last 2 version"]
@@ -68,42 +49,31 @@ gulp.task("css", () => {
     .pipe(browserSync.reload({
       stream: true
     }));
+  return stream;
 });
 
-gulp.task("browser-sync", () => {
+gulp.task("browser-sync", ["server"], function() {
   browserSync.init({
     port: 3000,
     proxy: "http://localhost:8000"
   });
 });
 
-var node;
-gulp.task("server", function() {
-  if(node) {
-    node.kill();
-  }
-  node = spawn("node", ["index.js"], {
-    stdio: "inherit"
-  });
-  node.on("close", function(code) {
-    if(code === 8) {
-      gulp.log("Error detected, waiting for changes...");
-    }
+gulp.task("server", ["build"], function(cb) {
+  nodemon({script: "index.js", env: {"NODE_ENV": "development"}})
+  .on("start", function() {
+    cb();
   });
 });
 
-// clean build directory
-gulp.task("clean", (cb) => {
+gulp.task("clean", function(cb) {
   del(["build"], cb);
 });
 
-gulp.task("default", ["javascript", "css", "server", "browser-sync"], () => {
-  gulp.watch(["index.js", "server.js", "index.jade", "routes/**/*.js", "models/**/*.js"], ["server", browserSync.reload]);
+gulp.task("build", ["javascript", "css"], function(cb) {
+  cb();
+});
+
+gulp.task("default", ["build", "server", "browser-sync"], function() {
   gulp.watch("scss/*.scss", ["css"]);
 });
-
-gulp.task("production", function() {
-  config.production = true;
-});
-
-gulp.task("build", ["production", "javascript", "css"]);

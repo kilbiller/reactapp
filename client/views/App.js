@@ -1,8 +1,4 @@
 import React from "react";
-import {
-  RouteHandler
-}
-from "react-router";
 
 // Views
 import Header from "./Header";
@@ -13,13 +9,17 @@ export default class App extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <Header/>
         <div className="container">
-          <RouteHandler {...this.props}/>
+          {this.props.children}
         </div>
       </div>
     );
   }
 }
+
+App.propTypes = {
+  children: React.PropTypes.object
+};

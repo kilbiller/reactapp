@@ -17,11 +17,6 @@ export default class AnimesAdd extends React.Component {
     this.addAnime = this.addAnime.bind(this);
   }
 
-  onAnimeUpdated(data) {
-    this.setState({
-      data: data
-    });
-  }
 
   componentDidMount() {
     this.unsubscribe = AnimeStore.listen(this.onAnimeUpdated);
@@ -31,18 +26,24 @@ export default class AnimesAdd extends React.Component {
     this.unsubscribe();
   }
 
+  onAnimeUpdated(data) {
+    this.setState({
+      data: data
+    });
+  }
+
   addAnime(e) {
     e.preventDefault();
-    var anime = {
-      title: React.findDOMNode(this.refs.title).value.trim(),
-      year: React.findDOMNode(this.refs.year).value.trim(),
-      synopsis: React.findDOMNode(this.refs.synopsis).value.trim()
+    const anime = {
+      title: this.refs.title.value.trim(),
+      year: this.refs.year.value.trim(),
+      synopsis: this.refs.synopsis.value.trim()
     };
-    AnimeActions.addAnime(anime, this.context.router);
+    AnimeActions.addAnime(anime, this.props.history);
   }
 
   render() {
-    return(
+    return (
       <div className="row">
         <form className="col s12">
           <div className="row">
@@ -65,7 +66,3 @@ export default class AnimesAdd extends React.Component {
     );
   }
 }
-
-AnimesAdd.contextTypes = {
-  router: React.PropTypes.func
-};
