@@ -14,7 +14,7 @@ import Login from "./views/Login";
 import Logout from "./views/Logout";
 import Calendar from "./views/Calendar";
 
-var routes = (
+const routes = (
   <Route path="/" component={App}>
     <IndexRoute component={Home}/>
     <Route path="animes" component={Animes}/>
