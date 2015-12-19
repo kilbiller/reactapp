@@ -198,27 +198,32 @@ router.delete('/api/animes/:slug/episodes/:number', function(req, res, next) {
 
 // Register
 router.post('/api/register', function(req, res, next) {
-    const user = new User({
-      username: req.body.username,
-      password: User.createHash(req.body.password)
-  });
+    User.createHash(req.body.password).then(function(password) {
+        const user = new User({
+            username: req.body.username,
+            password: password
+        });
 
-    user.save(function(err, user) {
-      if(err) {
+        user.save(function(err, user) {
+            if(err) {
+                return next(err);
+            }
+
+            const token = jwt.sign({}, jwtSecret, {
+                expiresInMinutes: 60 * 24 * 7,
+                issuer: user.id
+            });
+
+            res.status(201).json({
+                status: 201,
+                user: user,
+                token: token
+            });
+        });
+    })
+    .catch(function(err) {
         return next(err);
-    }
-
-      const token = jwt.sign({}, jwtSecret, {
-        expiresInMinutes: 60 * 24 * 7,
-        issuer: user.id
     });
-
-      res.status(201).json({
-        status: 201,
-        user: user,
-        token: token
-    });
-  });
 });
 
 // Login
