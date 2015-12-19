@@ -1,7 +1,14 @@
-import mongoose from "mongoose";
-import slug from "slug";
+import bookshelf from '../bookshelf.js';
+import slug from 'slug';
 
-const episodeSchema = new mongoose.Schema({
+export default class Anime extends bookshelf.Model {
+    constructor(...args) {
+        super(...args);
+        this.tableName = 'animes';
+    }
+}
+
+/* const episodeSchema = new mongoose.Schema({
   number: {
     type: Number,
     required: true
@@ -50,4 +57,4 @@ animeSchema.pre("save", function(next) {
 
 const Anime = mongoose.model("Anime", animeSchema);
 
-module.exports = Anime;
+module.exports = Anime;*/

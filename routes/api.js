@@ -11,56 +11,57 @@ const jwtSecret = 'fdg54FDHA6dh4';
 function checkToken(req, res, next) {
     const token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['authorization'];
     if(token) {
-      jwt.verify(token, jwtSecret, function(err, decoded) {
-        if(err) {
-          return next(err);
-      }
-        User.findOne({
-          '_id': decoded.iss
-      }, function(err, user) {
-          if(err) {
-            return next(err);
-        }
-          if(!user) {
-            const error = new Error('User account associated with token not found');
-            error.status = 401;
-            return next(error);
-        }
-          req.user = user;
-          next();
-      });
-    });
-  } else {
-      const error = new Error('No token found, please authenticate');
-      error.status = 401;
-      return next(error);
-  }
+        jwt.verify(token, jwtSecret, function(err, decoded) {
+            if(err) {
+                return next(err);
+            }
+            User.where({'id': decoded.iss}).fetch()
+            .then(function(user) {
+                if(!user) {
+                    const error = new Error('User account associated with token not found');
+                    error.status = 401;
+                    return next(error);
+                }
+
+                req.user = user;
+                next();
+            })
+            .catch(function(err) {
+                return next(err);
+            });
+        });
+    } else {
+        const error = new Error('No token found, please authenticate');
+        error.status = 401;
+        return next(error);
+    }
 }
 
 // Anime
 router.get('/api/animes', function(req, res, next) {
-    Anime.find(function(err, animes) {
-      if(err) {
+    Anime.fetchAll().then(function(animes) {
+        if(!animes) {
+            return next(new Error('No anime found.'));
+        }
+        res.send(animes);
+    })
+    .catch(function(err) {
         return next(err);
-    }
-      res.send(animes);
-  });
+    });
 });
 
 router.get('/api/animes/:slug', function(req, res, next) {
-    Anime.findOne({
-      slug: req.params.slug
-  },
-    function(err, anime) {
-        if(err) {
-          return next(err);
-      }
+    Anime.where({'slug': req.params.slug}).fetch()
+    .then(function(anime) {
         if(!anime) {
-          const error = new Error('Anime does not exists.');
-          error.status = 404;
-          return next(error);
-      }
+            const error = new Error('Anime does not exists.');
+            error.status = 404;
+            return next(error);
+        }
         res.status(200).json(anime);
+    })
+    .catch(function(err) {
+        return next(err);
     });
 });
 
@@ -222,22 +223,22 @@ router.post('/api/register', function(req, res, next) {
 
 // Login
 router.post('/api/login', function(req, res, next) {
-    User.isValidLogin(req.body.username, req.body.password, function(err, user) {
-      if(err) {
-        return next(err);
-    }
+    User.isValidLogin(req.body.username, req.body.password)
+    .then(function(user) {
+        if(!user) {
+            throw new Error('/api/login error');
+        }
+        const token = jwt.sign({}, jwtSecret, {
+            expiresInMinutes: 60 * 24 * 7,
+            issuer: user.id
+        });
 
-      const token = jwt.sign({}, jwtSecret, {
-        expiresInMinutes: 60 * 24 * 7,
-        issuer: user.id
+        res.status(200).json({
+            status: 200,
+            user: user,
+            token: token
+        });
     });
-
-      res.status(200).json({
-        status: 200,
-        user: user,
-        token: token
-    });
-  });
 });
 
 router.post('/api/users/animes', checkToken, function(req, res, next) {
