@@ -1,26 +1,30 @@
-import express from "express";
-import logger from "morgan";
-import bodyParser from "body-parser";
-import favicon from "serve-favicon";
-import React from "react";
-import createLocation from "history/lib/createLocation";
-import {renderToString} from "react-dom/server";
-import {RoutingContext, match} from "react-router";
-import clientRoutes from "./client/routes";
-import mongoose from "mongoose";
+import express from 'express';
+import logger from 'morgan';
+import bodyParser from 'body-parser';
+import favicon from 'serve-favicon';
+import React from 'react';
+import createLocation from 'history/lib/createLocation';
+import {renderToString} from 'react-dom/server';
+import {RoutingContext, match} from 'react-router';
+import clientRoutes from './client/routes';
 
-// MongoDB connection
-mongoose.connect("mongodb://localhost/reactapp");
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
+import User from './models/User.js';
+
+/* User.where('id', 1).fetch().then(function(user) {
+    console.log(user.get('mail'));
+}).catch(function(err) {
+    console.log(err);
+});*/
+
+User.isValidLogin('kilbiller13@gmail.com', 'fdgd')
+.then(function(user) {
+    console.log(user);
+})
+.catch(function(err) {
+    console.log(err.message);
+});
 
 const app = express();
-
-if(db) {
-  mongoose.connect("mongodb://localhost/reactapp");
-} else {
-  mongoose.connect("mongodb://localhost/reactapp");
-}
 
 app.set("views", "./");
 app.set("view engine", "jade");

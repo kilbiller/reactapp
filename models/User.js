@@ -1,7 +1,38 @@
-import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
+import bookshelf from '../bookshelf.js';
 
-const animeListSchema = new mongoose.Schema({
+export default class User extends bookshelf.Model {
+    constructor(...args) {
+        super(...args);
+        this.tableName = 'users';
+    }
+
+    static createHash(password) {
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    }
+
+    static isValidLogin(mail, password) {
+        const self = this;
+        return new Promise(function(resolve, reject) {
+            self.where('mail', mail).fetch()
+            .then(function(user) {
+                if(!user) {
+                    reject(new Error('Incorrect username'));
+                }
+
+                if(!bcrypt.compareSync(password, user.get('password'))) {
+                    reject(new Error('Incorrect password'));
+                }
+                resolve(user);
+            })
+            .catch(function(err) {
+                reject(err);
+            });
+        });
+    }
+}
+
+/* const animeListSchema = new mongoose.Schema({
   anime: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Anime"
@@ -43,6 +74,4 @@ User.isValidLogin = function(username, password, cb) {
 
 User.createHash = function(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-};
-
-module.exports = User;
+};*/
