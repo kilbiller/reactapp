@@ -10,12 +10,6 @@ import clientRoutes from './client/routes';
 
 import User from './models/User.js';
 
-/* User.where('id', 1).fetch().then(function(user) {
-    console.log(user.get('mail'));
-}).catch(function(err) {
-    console.log(err);
-});*/
-
 User.isValidLogin('kilbiller13@gmail.com', 'fdgd')
 .then(function(user) {
     console.log(user);
