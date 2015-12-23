@@ -41,6 +41,6 @@ export default class Episode extends React.Component {
 }
 
 Episode.propTypes = {
-  animeSlug: React.PropTypes.number.isRequired,
+  animeSlug: React.PropTypes.string.isRequired,
   episode: React.PropTypes.object.isRequired
 };

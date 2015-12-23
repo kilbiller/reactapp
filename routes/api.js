@@ -4,12 +4,13 @@ import _ from 'lodash';
 
 import Anime from '../models/Anime';
 import User from '../models/User';
+import Episode from '../models/Episode';
 
 const router = express.Router();
 const jwtSecret = 'fdg54FDHA6dh4';
 
 function checkToken(req, res, next) {
-    const token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['authorization'];
+    const token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers.authorization;
     if(token) {
         jwt.verify(token, jwtSecret, function(err, decoded) {
             if(err) {
@@ -51,7 +52,7 @@ router.get('/api/animes', function(req, res, next) {
 });
 
 router.get('/api/animes/:slug', function(req, res, next) {
-    Anime.where({'slug': req.params.slug}).fetch()
+    Anime.where({'slug': req.params.slug}).fetch({withRelated: ['episodes']})
     .then(function(anime) {
         if(!anime) {
             const error = new Error('Anime does not exists.');
@@ -66,7 +67,7 @@ router.get('/api/animes/:slug', function(req, res, next) {
 });
 
 router.post('/api/animes', checkToken, function(req, res, next) {
-    const anime = new Anime({
+    /*const anime = new Anime({
       title: req.body.title,
       year: req.body.year,
       image: 'http://cdn.myanimelist.net/images/anime/8/33713l.jpg',
@@ -90,52 +91,53 @@ router.post('/api/animes', checkToken, function(req, res, next) {
         title: 'The Fittest:Survival of the Fittest',
         airDate: 'Oct 20, 2011 (JST)'
     }]
-  });
+    });*/
 
-    anime.save(function(err, anime) {
-      if(err) {
+    const anime = {
+        slug: 'gfd',
+        title: req.body.title,
+        year: 2016,
+        image: 'gdfgdf',
+        synopsys: 'fgdfgdfgdf',
+        status: 'dfgdf'
+    };
+
+    const episodes = [{
+        number: 1,
+        title: 'Episode 1'
+    }, {
+        number: 2,
+        title: 'Episode 2'
+    }];
+
+    new Anime(anime).save().then(function(anime) {
+        for(let episode of episodes) {
+            episode.anime_id = anime.get('id');
+            new Episode(episode).save();
+        }
+
+        res.status(201).json({
+            status: 201,
+            url: 'http://' + req.hostname + '/animes/' + anime.get('slug'),
+            slug: anime.get('slug')
+        });
+    })
+    .catch(function(err) {
         return next(err);
-    }
-      res.status(201).json({
-        status: 201,
-        url: 'http://' + req.hostname + '/animes/' + anime.slug,
-        slug: anime.slug
     });
-  });
 });
 
 router.delete('/api/animes/:slug', checkToken, function(req, res, next) {
-    Anime.findOne({
-      slug: req.params.slug
-  }, function(err, anime) {
-      if(err) {
-        return next(err);
-    }
-      User.update({
-        'animeList.anime': anime.id
-    }, {
-        $pull: {
-          'animeList': {
-            anime: anime.id
-        }
-      }
-    }, {
-        multi: true
-    },
-    function(err, users) {
-        if(err) {
-          return next(err);
-      }
-        anime.remove(function(err, anime) {
-          if(err) {
-            return next(err);
-        }
-          res.status(200).json({
-            status: 200
+    Anime.where({'slug': req.params.slug}).fetch().then(function(anime) {
+        anime.destroy().then(function() {
+            res.status(200).json({
+                status: 200
+            });
         });
-      });
+    })
+    .catch(function(err) {
+        return next(err);
     });
-  });
 });
 
 // Episodes

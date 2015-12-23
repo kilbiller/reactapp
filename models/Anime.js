@@ -1,12 +1,18 @@
-import bookshelf from '../bookshelf.js';
+import bookshelf from '../bookshelf';
 import slug from 'slug';
+import User from './User';
+import AnimeList from './AnimeList';
+import Episode from './Episode';
 
-export default class Anime extends bookshelf.Model {
-    constructor(...args) {
-        super(...args);
-        this.tableName = 'animes';
+export default bookshelf.Model.extend({
+    tableName: 'animes',
+    users: function() {
+        return this.belongsToMany(User).through(AnimeList);
+    },
+    episodes: function() {
+        return this.hasMany(Episode);
     }
-}
+});
 
 /* const episodeSchema = new mongoose.Schema({
   number: {

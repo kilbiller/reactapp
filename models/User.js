@@ -1,13 +1,20 @@
 import bcrypt from 'bcrypt';
-import bookshelf from '../bookshelf.js';
+import bookshelf from '../bookshelf';
+import Anime from './Anime';
+import AnimeList from './AnimeList';
+import EpisodeList from './EpisodeList';
+import Episode from './Episode';
 
-export default class User extends bookshelf.Model {
-    constructor(...args) {
-        super(...args);
-        this.tableName = 'users';
+export default bookshelf.Model.extend({
+    tableName: 'users',
+    animes: function() {
+        return this.belongsToMany(Anime).through(AnimeList);
+    },
+    episodes: function() {
+        return this.belongsToMany(Episode).through(EpisodeList);
     }
-
-    static createHash(password) {
+}, {
+    createHash: function(password) {
         return new Promise(function(resolve, reject) {
             bcrypt.genSalt(10, function(err, salt) {
                 if(err) {
@@ -23,9 +30,8 @@ export default class User extends bookshelf.Model {
                 });
             });
         });
-    }
-
-    static isValidLogin(mail, password) {
+    },
+    isValidLogin: function(mail, password) {
         const self = this;
         return new Promise(function(resolve, reject) {
             self.where('mail', mail).fetch()
@@ -44,4 +50,4 @@ export default class User extends bookshelf.Model {
             });
         });
     }
-}
+});

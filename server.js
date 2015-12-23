@@ -8,15 +8,36 @@ import {renderToString} from 'react-dom/server';
 import {RoutingContext, match} from 'react-router';
 import clientRoutes from './client/routes';
 
-import User from './models/User.js';
+import User from './models/User';
+import Anime from './models/Anime';
 
-User.isValidLogin('kilbiller13@gmail.com', 'fdgd')
+/*User.isValidLogin('kilbiller13@gmail.com', 'fdgd')
 .then(function(user) {
     console.log(user);
 })
 .catch(function(err) {
     console.log(err.message);
+});*/
+
+/*User.where('id', 2).fetch({withRelated: ['animes']}).then(function(user) {
+    //console.log(user.related('animes').toJSON());
+    //console.log(user.related('animes'));
+    user.related('animes').each(function(anime) {
+        anime.pivot.fetch().then(function(lol) {
+            console.log(lol);
+        })
+    })
+}).catch(function(err) {
+    console.error(err);
+});*/
+
+Anime.where('id', 1).fetch({withRelated: ['episodes']}).then(function(anime) {
+    console.log(anime.related('episodes').toJSON());
+}).catch(function(err) {
+    console.error(err);
 });
+
+
 
 const app = express();
 
